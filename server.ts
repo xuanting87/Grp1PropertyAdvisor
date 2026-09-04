@@ -10,6 +10,8 @@ import pricesHandler from './api/prices.js';
 import trendsHandler from './api/trends.js';
 // @ts-ignore - JavaScript serverless handlers
 import amenitiesHandler from './api/amenities.js';
+// @ts-ignore - JavaScript serverless handlers
+import dataHandler from './api/data.js';
 
 async function startServer() {
   const app = express();
@@ -22,6 +24,8 @@ async function startServer() {
   app.all('/api/prices', pricesHandler);
   app.all('/api/trends', trendsHandler);
   app.all('/api/amenities', amenitiesHandler);
+  app.all('/api/data', dataHandler);
+  app.all('/api/data/*', dataHandler);
 
   // Serve static checklist data
   app.get('/data/document-checklists.json', (req, res) => {
