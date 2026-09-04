@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Singapore Property Price Advisor | Indicative Market Insights & Guidance</title>
+    <meta name="description" content="An indicative Singapore property price advisor and decision tool for HDB and private properties with real comparable transactions, location comparisons, price trends, document checklists, and amenities overview." />
+    <meta property="og:title" content="Singapore Property Price Advisor" />
+    <meta property="og:description" content="An indicative Singapore property price advisor and decision tool for HDB and private properties with real comparable transactions, location comparisons, price trends, document checklists, and amenities overview." />
+    <meta property="og:type" content="website" />
+
+    <!-- Google Fonts (Plus Jakarta Sans & Outfit) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Leaflet CSS for Map Rendering -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <!-- Material Symbols Outlined -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
+    <!-- Tailwind CSS Browser CDN (Sleek Interface) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Main Stylesheet (Sleek Interface Design System & Mobile First) -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Top Sticky Header -->
+    <header class="app-header" id="main-header">
+      <div class="header-inner">
+        <div class="brand-row">
+          <div class="brand-identity">
+            <div class="brand-icon" aria-hidden="true">SG</div>
+            <div class="brand-text">
+              <h1>Singapore Property Price Advisor</h1>
+              <span class="brand-tagline">Indicative market insights for prospective buyers</span>
+            </div>
+          </div>
+          <div class="official-badge" role="status">
+            <span aria-hidden="true">●</span> Data.gov.sg & OneMap
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="app-nav" id="main-nav" aria-label="Main Application Navigation">
+          <button type="button" class="nav-tab active" id="tab-price-advisor" data-panel="panel-price-advisor">
+            Price Advisor
+          </button>
+          <button type="button" class="nav-tab" id="tab-comparison" data-panel="panel-comparison">
+            Location Comparison
+          </button>
+          <button type="button" class="nav-tab" id="tab-trends" data-panel="panel-trends">
+            Price Trends
+          </button>
+          <button type="button" class="nav-tab" id="tab-documentation" data-panel="panel-documentation">
+            Documentation Advisor
+          </button>
+          <button type="button" class="nav-tab" id="tab-amenities" data-panel="panel-amenities">
+            Amenities & Map
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Global Mandatory Legal Disclaimer -->
+    <aside class="global-disclaimer" id="global-disclaimer" role="note" aria-label="Legal Disclaimer">
+      <div class="disclaimer-inner">
+        <span class="disclaimer-icon" aria-hidden="true">⚠️</span>
+        <p><strong>Indicative only:</strong> Not a substitute for a CEA-licensed property agent, lawyer, or your bank. Transactions reflect real historical government records.</p>
+      </div>
+    </aside>
+
+    <!-- Main App Container -->
+    <main class="main-container" id="app-main">
+
+      <!-- ================================================================= -->
+      <!-- 1. PRICE ADVISOR PANEL -->
+      <!-- ================================================================= -->
+      <section class="panel-section active" id="panel-price-advisor" aria-labelledby="heading-price-advisor">
+        <div class="panel-header">
+          <h2 id="heading-price-advisor">Property Price Range Advisor</h2>
+          <p class="panel-subtitle">Estimate a realistic price range based on verified comparable transactions in the same town and flat type.</p>
+        </div>
+
+        <!-- Input Form Card -->
+        <div class="card" id="price-advisor-card">
+          <h3 class="card-title" id="search-parameters-title">Search Parameters</h3>
+          <form id="price-advisor-form">
+            <div class="form-grid cols-3">
+              
+              <!-- Address / Postal Code Input with OneMap Autocomplete -->
+              <div class="form-group">
+                <label for="input-address" class="form-label">Address or 6-Digit Postal Code</label>
+                <div class="autocomplete-wrapper" id="address-autocomplete-wrapper">
+                  <input type="text" id="input-address" class="form-input" placeholder="e.g. 560116 or 116 Ang Mo Kio Ave 4" autocomplete="off" />
+                  <div class="autocomplete-dropdown" id="address-dropdown" role="listbox" aria-label="Address suggestions"></div>
+                </div>
+                <span class="form-hint" id="address-hint">Autocompletes via Singapore OneMap SLA</span>
+              </div>
+
+              <!-- HDB Town / Planning Area -->
+              <div class="form-group">
+                <label for="select-town" class="form-label">HDB Town / Planning Area</label>
+                <select id="select-town" class="form-select">
+                  <option value="ANG MO KIO" selected>Ang Mo Kio</option>
+                  <option value="BEDOK">Bedok</option>
+                  <option value="BISHAN">Bishan</option>
+                  <option value="BUKIT BATOK">Bukit Batok</option>
+                  <option value="BUKIT MERAH">Bukit Merah</option>
+                  <option value="BUKIT PANJANG">Bukit Panjang</option>
+                  <option value="BUKIT TIMAH">Bukit Timah</option>
+                  <option value="CENTRAL AREA">Central Area</option>
+                  <option value="CHOA CHU KANG">Choa Chu Kang</option>
+                  <option value="CLEMENTI">Clementi</option>
+                  <option value="GEYLANG">Geylang</option>
+                  <option value="HOUGANG">Hougang</option>
+                  <option value="JURONG EAST">Jurong East</option>
+                  <option value="JURONG WEST">Jurong West</option>
+                  <option value="KALLANG/WHAMPOA">Kallang / Whampoa</option>
+                  <option value="MARINE PARADE">Marine Parade</option>
+                  <option value="PASIR RIS">Pasir Ris</option>
+                  <option value="PUNGGOL">Punggol</option>
+                  <option value="QUEENSTOWN">Queenstown</option>
+                  <option value="SEMBAWANG">Sembawang</option>
+                  <option value="SENGKANG">Sengkang</option>
+                  <option value="SERANGOON">Serangoon</option>
+                  <option value="TAMPINES">Tampines</option>
+                  <option value="TOA PAYOH">Toa Payoh</option>
+                  <option value="WOODLANDS">Woodlands</option>
+                  <option value="YISHUN">Yishun</option>
+                </select>
+                <span class="form-hint">Auto-resolved from postal code or selected manually</span>
+              </div>
+
+              <!-- Property Type (HDB vs Private) -->
+              <div class="form-group">
+                <label for="select-property-type" class="form-label">Property Category</label>
+                <select id="select-property-type" class="form-select">
+                  <option value="hdb" selected>HDB Resale Flat (Real-time data.gov.sg)</option>
+                  <option value="private">Private Residential (URA API Key required)</option>
+                </select>
+              </div>
+
+            </div>
+
+            <!-- Second Row Filters -->
+            <div class="form-grid cols-3" style="margin-top: 1rem;">
+              
+              <!-- Flat Type -->
+              <div class="form-group" id="flat-type-group">
+                <label for="select-flat-type" class="form-label">Flat Type</label>
+                <select id="select-flat-type" class="form-select">
+                  <option value="2 ROOM">2-Room Flat</option>
+                  <option value="3 ROOM">3-Room Flat</option>
+                  <option value="4 ROOM" selected>4-Room Flat</option>
+                  <option value="5 ROOM">5-Room Flat</option>
+                  <option value="EXECUTIVE">Executive Flat</option>
+                </select>
+              </div>
+
+              <!-- Remaining Lease Range Filter -->
+              <div class="form-group" id="lease-filter-group">
+                <label for="select-lease-range" class="form-label">Remaining Lease (Years)</label>
+                <select id="select-lease-range" class="form-select">
+                  <option value="all" selected>All Lease Lengths</option>
+                  <option value="45-60">45 to 60 Years (Older flats)</option>
+                  <option value="60-75">60 to 75 Years (Mid-aged flats)</option>
+                  <option value="75-85">75 to 85 Years (Young flats)</option>
+                  <option value="85-99">85+ Years (Nearly new / BTO MOP)</option>
+                </select>
+              </div>
+
+              <!-- Recency Window -->
+              <div class="form-group">
+                <label for="select-window" class="form-label">Transaction Recency Window</label>
+                <select id="select-window" class="form-select">
+                  <option value="3">Past 3 Months</option>
+                  <option value="6">Past 6 Months</option>
+                  <option value="12" selected>Past 12 Months (Recommended)</option>
+                  <option value="24">Past 24 Months</option>
+                </select>
+              </div>
+
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem;">
+              <button type="submit" class="btn btn-primary" id="btn-calculate-price">
+                Calculate Indicative Price Range
+              </button>
+              <button type="button" class="btn btn-secondary" id="btn-reset-price">
+                Reset
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Result Container -->
+        <div id="price-advisor-result-container">
+          <!-- Initial Empty State -->
+          <div class="state-empty" id="price-empty-state">
+            <span style="font-size: 2rem;" aria-hidden="true">🏢</span>
+            <h3 class="state-title">No Search Performed Yet</h3>
+            <p class="state-desc">Enter an address, postal code, or select an HDB town and flat type to retrieve verified government comparable transactions.</p>
+          </div>
+
+          <!-- Loading State -->
+          <div class="state-loading" id="price-loading-state" style="display: none;">
+            <div class="spinner" aria-label="Loading data"></div>
+            <h3 class="state-title">Querying Singapore Government Datastore...</h3>
+            <p class="state-desc">Fetching official HDB resale records and calculating statistical percentiles.</p>
+          </div>
+
+          <!-- Error State -->
+          <div class="state-error" id="price-error-state" style="display: none;">
+            <span style="font-size: 2rem;" aria-hidden="true">❌</span>
+            <h3 class="state-title" id="price-error-title">Data Retrieval Issue</h3>
+            <p class="state-desc" id="price-error-desc">Unable to connect to the government data service.</p>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-retry-price">Retry Query</button>
+          </div>
+
+          <!-- Insufficient Data Warning (<5 Transactions) -->
+          <div class="alert-warning-banner" id="price-insufficient-banner" style="display: none;">
+            <span class="alert-icon" aria-hidden="true">⚠️</span>
+            <div>
+              <strong>Sample size below reliability threshold:</strong>
+              <p id="price-insufficient-text"></p>
+            </div>
+          </div>
+
+          <!-- Actual Results Content Card -->
+          <div class="card" id="price-results-card" style="display: none; margin-top: 1rem;">
+            <!-- Hero Range Banner -->
+            <div class="price-hero" id="price-hero-box">
+              <div class="price-hero-tag" id="price-hero-tag">Indicative 25th - 75th Percentile Range</div>
+              <div class="price-hero-range" id="price-range-display">$0 – $0</div>
+              <div class="price-hero-sub" id="price-hero-sub">Based on verified comparable sales in Ang Mo Kio</div>
+              
+              <!-- Metrics in Hero -->
+              <div class="metrics-row">
+                <div class="metric-box">
+                  <div class="metric-label">Median Resale Price</div>
+                  <div class="metric-value" id="price-median-val">-</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-label">Median Price / Sqft</div>
+                  <div class="metric-value" id="price-psf-val">-</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-label">Median Floor Area</div>
+                  <div class="metric-value" id="price-area-val">-</div>
+                </div>
+                <div class="metric-box">
+                  <div class="metric-label">Verified Comparables</div>
+                  <div class="metric-value" id="price-sample-val">-</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Statistical Distribution Gauge -->
+            <div class="gauge-container" id="price-gauge-container">
+              <div class="gauge-labels">
+                <span id="gauge-min-label">Min: $0</span>
+                <span id="gauge-p25-label">25%: $0</span>
+                <span id="gauge-median-label">Median: $0</span>
+                <span id="gauge-p75-label">75%: $0</span>
+                <span id="gauge-max-label">Max: $0</span>
+              </div>
+              <div class="gauge-bar">
+                <div class="gauge-fill" id="gauge-fill-bar"></div>
+              </div>
+            </div>
+
+            <!-- Mandatory Panel Disclaimer -->
+            <div class="alert-warning-banner" style="margin: 1rem 0;">
+              <span class="alert-icon" aria-hidden="true">ℹ️</span>
+              <p><strong>Notice:</strong> Indicative only. Not a substitute for a CEA-licensed property agent, lawyer, or your bank. Does not constitute a formal bank mortgage valuation or appraisal.</p>
+            </div>
+
+            <!-- Detailed Comparables Table -->
+            <h3 class="card-title" style="margin-top: 1.5rem;">
+              <span>Recent Comparable Transactions</span>
+              <span class="badge-tag" id="comparables-count-badge">0 records</span>
+            </h3>
+            <div class="table-responsive">
+              <table class="data-table" id="comparables-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Block & Street</th>
+                    <th scope="col">Storey</th>
+                    <th scope="col">Floor Area</th>
+                    <th scope="col">Remaining Lease</th>
+                    <th scope="col">Month</th>
+                    <th scope="col">Resale Price</th>
+                    <th scope="col">Price / Sqft</th>
+                  </tr>
+                </thead>
+                <tbody id="comparables-tbody">
+                  <!-- Generated via app.js -->
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- 2. LOCATION COMPARISON PANEL -->
+      <!-- ================================================================= -->
+      <section class="panel-section" id="panel-comparison" aria-labelledby="heading-comparison">
+        <div class="panel-header">
+          <h2 id="heading-comparison">Side-by-Side Location Comparison</h2>
+          <p class="panel-subtitle">Compare median resale prices, price per sqft (PSF), and transaction volume across 2 to 4 Singapore towns.</p>
+        </div>
+
+        <div class="card" id="comparison-controls-card">
+          <h3 class="card-title">Select 2 to 4 Towns to Compare</h3>
+          <p class="form-hint" style="margin-bottom: 0.75rem;">Click on town chips to add or remove (between 2 and 4 towns):</p>
+          
+          <!-- Town Picker Chips Grid -->
+          <div class="town-picker-grid" id="town-chips-container" role="group" aria-label="Select towns">
+            <!-- Populated via app.js -->
+          </div>
+
+          <!-- Flat Type & Window Controls -->
+          <div class="form-grid cols-2" style="margin-top: 1rem;">
+            <div class="form-group">
+              <label for="comparison-flat-type" class="form-label">Flat Type</label>
+              <select id="comparison-flat-type" class="form-select">
+                <option value="3 ROOM">3-Room Flat</option>
+                <option value="4 ROOM" selected>4-Room Flat</option>
+                <option value="5 ROOM">5-Room Flat</option>
+                <option value="EXECUTIVE">Executive Flat</option>
+                <option value="ALL">All Flat Types</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="comparison-window" class="form-label">Time Window</label>
+              <select id="comparison-window" class="form-select">
+                <option value="6">Past 6 Months</option>
+                <option value="12" selected>Past 12 Months</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-top: 1rem;">
+            <button type="button" class="btn btn-primary" id="btn-run-comparison">
+              Compare Selected Locations
+            </button>
+          </div>
+        </div>
+
+        <!-- Comparison Results -->
+        <div id="comparison-results-container">
+          <div class="state-empty" id="comparison-empty-state">
+            <span style="font-size: 2rem;" aria-hidden="true">⚖️</span>
+            <h3 class="state-title">Ready to Compare</h3>
+            <p class="state-desc">Select at least 2 towns above and click "Compare Selected Locations".</p>
+          </div>
+
+          <div class="state-loading" id="comparison-loading-state" style="display: none;">
+            <div class="spinner" aria-label="Loading comparison data"></div>
+            <h3 class="state-title">Retrieving Multi-Town Data...</h3>
+            <p class="state-desc">Fetching transactions across chosen towns from data.gov.sg.</p>
+          </div>
+
+          <div class="state-error" id="comparison-error-state" style="display: none;">
+            <span style="font-size: 2rem;" aria-hidden="true">❌</span>
+            <h3 class="state-title">Comparison Query Failed</h3>
+            <p class="state-desc" id="comparison-error-desc">Unable to retrieve multi-town transactions.</p>
+          </div>
+
+          <!-- Cards Grid for Side-by-Side -->
+          <div class="comparison-grid" id="comparison-cards-grid" style="display: none;">
+            <!-- Rendered by app.js -->
+          </div>
+
+          <!-- Comparative Insights Summary -->
+          <div class="card" id="comparison-summary-card" style="display: none; margin-top: 1rem;">
+            <h3 class="card-title">Key Comparative Takeaways</h3>
+            <div id="comparison-insights-content"></div>
+            <p class="form-hint" style="margin-top: 0.75rem;">Indicative only. Not a substitute for a CEA-licensed property agent, lawyer, or your bank.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- 3. PRICE TREND TIMELINE PANEL -->
+      <!-- ================================================================= -->
+      <section class="panel-section" id="panel-trends" aria-labelledby="heading-trends">
+        <div class="panel-header">
+          <h2 id="heading-trends">Price Trend Timeline</h2>
+          <p class="panel-subtitle">Track historical median resale price and price-per-sqft movements over 3 months, 6 months, and 1 year.</p>
+        </div>
+
+        <div class="card" id="trend-controls-card">
+          <div class="form-grid cols-4">
+            
+            <div class="form-group">
+              <label for="trend-town" class="form-label">HDB Town</label>
+              <select id="trend-town" class="form-select">
+                <option value="ANG MO KIO" selected>Ang Mo Kio</option>
+                <option value="BEDOK">Bedok</option>
+                <option value="BISHAN">Bishan</option>
+                <option value="BUKIT BATOK">Bukit Batok</option>
+                <option value="BUKIT MERAH">Bukit Merah</option>
+                <option value="BUKIT PANJANG">Bukit Panjang</option>
+                <option value="CHOA CHU KANG">Choa Chu Kang</option>
+                <option value="CLEMENTI">Clementi</option>
+                <option value="GEYLANG">Geylang</option>
+                <option value="HOUGANG">Hougang</option>
+                <option value="JURONG EAST">Jurong East</option>
+                <option value="JURONG WEST">Jurong West</option>
+                <option value="KALLANG/WHAMPOA">Kallang / Whampoa</option>
+                <option value="PASIR RIS">Pasir Ris</option>
+                <option value="PUNGGOL">Punggol</option>
+                <option value="QUEENSTOWN">Queenstown</option>
+                <option value="SENGKANG">Sengkang</option>
+                <option value="SERANGOON">Serangoon</option>
+                <option value="TAMPINES">Tampines</option>
+                <option value="TOA PAYOH">Toa Payoh</option>
+                <option value="WOODLANDS">Woodlands</option>
+                <option value="YISHUN">Yishun</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="trend-flat-type" class="form-label">Flat Type</label>
+              <select id="trend-flat-type" class="form-select">
+                <option value="3 ROOM">3-Room Flat</option>
+                <option value="4 ROOM" selected>4-Room Flat</option>
+                <option value="5 ROOM">5-Room Flat</option>
+                <option value="EXECUTIVE">Executive Flat</option>
+              </select>
+            </div>
+
+            <!-- Metric Toggle (Resale Price vs PSF) -->
+            <div class="form-group">
+              <label class="form-label">Chart Metric</label>
+              <div class="segmented-control" id="metric-toggle" role="radiogroup" aria-label="Chart Metric">
+                <button type="button" class="segment-btn active" id="btn-metric-price" data-metric="price">Price ($)</button>
+                <button type="button" class="segment-btn" id="btn-metric-psf" data-metric="psf">PSF ($/sqft)</button>
+              </div>
+            </div>
+
+            <!-- Single Reusable Chart Time Range Toggle -->
+            <div class="form-group">
+              <label class="form-label">Time Range (Reused Chart)</label>
+              <div class="segmented-control" id="range-toggle" role="radiogroup" aria-label="Time Horizon">
+                <button type="button" class="segment-btn" id="btn-range-3m" data-range="3">3M</button>
+                <button type="button" class="segment-btn" id="btn-range-6m" data-range="6">6M</button>
+                <button type="button" class="segment-btn active" id="btn-range-1y" data-range="12">1Y</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Chart Container Card -->
+        <div class="card" id="trend-chart-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <h3 class="card-title" id="chart-dynamic-title" style="margin-bottom: 0;">4-Room Flat Median Price Trend in Ang Mo Kio</h3>
+            <span class="badge-tag" id="chart-timeframe-tag">Past 12 Months</span>
+          </div>
+
+          <!-- Loading State -->
+          <div class="state-loading" id="trend-loading-state" style="display: none;">
+            <div class="spinner" aria-label="Loading trends"></div>
+            <h3 class="state-title">Generating Trend Timeline...</h3>
+          </div>
+
+          <!-- Error State -->
+          <div class="state-error" id="trend-error-state" style="display: none;">
+            <span style="font-size: 2rem;" aria-hidden="true">❌</span>
+            <h3 class="state-title">Trend Data Unavailable</h3>
+            <p class="state-desc" id="trend-error-desc">Failed to fetch trend records.</p>
+          </div>
+
+          <!-- Native Canvas Chart Area (Single Reusable Canvas) -->
+          <div class="chart-wrapper" id="canvas-chart-wrapper">
+            <canvas id="trend-chart-canvas" width="800" height="360" role="img" aria-label="Price trend timeline graph"></canvas>
+            <div class="chart-tooltip" id="chart-tooltip" role="tooltip" aria-hidden="true"></div>
+          </div>
+
+          <!-- Stat Chips below Chart -->
+          <div class="trend-stats-row" id="trend-stats-row">
+            <div class="trend-stat-card">
+              <div class="trend-stat-label">Net Movement</div>
+              <div class="trend-stat-val" id="stat-net-movement">-</div>
+            </div>
+            <div class="trend-stat-card">
+              <div class="trend-stat-label">Period Peak</div>
+              <div class="trend-stat-val" id="stat-peak">-</div>
+            </div>
+            <div class="trend-stat-card">
+              <div class="trend-stat-label">Period Trough</div>
+              <div class="trend-stat-val" id="stat-trough">-</div>
+            </div>
+            <div class="trend-stat-card">
+              <div class="trend-stat-label">Total Transactions</div>
+              <div class="trend-stat-val" id="stat-total-volume">-</div>
+            </div>
+          </div>
+
+          <!-- Accessible Fallback Table for Screen Readers (WCAG 2.1 AA) -->
+          <details style="margin-top: 1rem;" id="chart-accessibility-details">
+            <summary style="font-size: 0.8125rem; font-weight: 600; cursor: pointer; color: var(--md-sys-color-primary);">
+              View Accessible Data Table for Screen Readers
+            </summary>
+            <div class="table-responsive" style="margin-top: 0.5rem;">
+              <table class="data-table" id="accessible-trend-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Month</th>
+                    <th scope="col">Median Price</th>
+                    <th scope="col">Median PSF</th>
+                    <th scope="col">Transactions</th>
+                  </tr>
+                </thead>
+                <tbody id="accessible-trend-tbody">
+                  <!-- Rendered by app.js -->
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <p class="form-hint" style="margin-top: 1rem;">Indicative only. Not a substitute for a CEA-licensed property agent, lawyer, or your bank.</p>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- 4. DOCUMENTATION ADVISOR PANEL -->
+      <!-- ================================================================= -->
+      <section class="panel-section" id="panel-documentation" aria-labelledby="heading-documentation">
+        <div class="panel-header">
+          <h2 id="heading-documentation">Buyer Documentation & Process Advisor</h2>
+          <p class="panel-subtitle">Personalized step-by-step roadmap, required paperwork, and tax obligations based on your citizenship and property choice.</p>
+        </div>
+
+        <div class="card" id="doc-advisor-profile-card">
+          <h3 class="card-title">Select Your Buyer Profile</h3>
+          
+          <div class="form-grid cols-3">
+            <!-- Citizenship -->
+            <div class="form-group">
+              <label for="doc-citizenship" class="form-label">Citizenship Status</label>
+              <select id="doc-citizenship" class="form-select">
+                <option value="sc" selected>Singapore Citizen (SC)</option>
+                <option value="pr">Singapore Permanent Resident (SPR)</option>
+                <option value="foreigner">Foreign Buyer / Non-Citizen</option>
+              </select>
+            </div>
+
+            <!-- Property Type -->
+            <div class="form-group">
+              <label for="doc-property-type" class="form-label">Property Intended</label>
+              <select id="doc-property-type" class="form-select">
+                <option value="hdb_resale" selected>HDB Resale Flat</option>
+                <option value="private_resale">Private Resale (Condo / Landed)</option>
+              </select>
+            </div>
+
+            <!-- Property Count (for ABSD) -->
+            <div class="form-group">
+              <label for="doc-property-count" class="form-label">Property Count</label>
+              <select id="doc-property-count" class="form-select">
+                <option value="1" selected>1st Residential Property</option>
+                <option value="2">2nd Residential Property</option>
+                <option value="3">3rd or Subsequent Property</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Purchase Price Estimator for Stamp Duty -->
+          <div class="form-grid cols-2" style="margin-top: 1rem;">
+            <div class="form-group">
+              <label for="doc-price-input" class="form-label">Estimated Purchase Price (S$)</label>
+              <input type="number" id="doc-price-input" class="form-input" value="650000" step="10000" min="100000" />
+              <span class="form-hint">Used to calculate exact Buyer's Stamp Duty (BSD) and ABSD</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Guidance Review Badge</label>
+              <div style="padding: 0.65rem 0.85rem; background-color: var(--md-sys-color-surface-variant); border-radius: var(--radius-md); font-size: 0.875rem; font-weight: 600;" id="doc-last-reviewed-badge">
+                Source of Truth: Reviewed September 2026
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stamp Duty & Financial Summary Card -->
+        <div class="card" id="stamp-duty-calc-card" style="margin-top: 1rem;">
+          <h3 class="card-title">Estimated Stamp Duty & Upfront Obligations</h3>
+          <div class="tax-calc-box">
+            <div class="tax-row">
+              <span>Buyer's Stamp Duty (BSD) — Tiered rates (1% - 6%):</span>
+              <strong id="calc-bsd-val">$14,100</strong>
+            </div>
+            <div class="tax-row">
+              <span id="calc-absd-label">Additional Buyer's Stamp Duty (ABSD) [0%]:</span>
+              <strong id="calc-absd-val">$0</strong>
+            </div>
+            <div class="tax-row tax-total">
+              <span>Total Government Stamp Duties (Payable within 14 days):</span>
+              <span id="calc-total-stamp-val">$14,100</span>
+            </div>
+          </div>
+          <p class="form-hint" style="margin-top: 0.75rem;">Can be paid with CPF Ordinary Account savings or cash through IRAS e-Stamping.</p>
+        </div>
+
+        <!-- Guided Process Milestones with Checkboxes -->
+        <div class="card" id="process-timeline-card" style="margin-top: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="card-title" style="margin-bottom: 0;">Step-by-Step Transaction Roadmap</h3>
+            <span class="badge-tag" id="progress-tag">0 of 0 completed</span>
+          </div>
+          <p class="form-hint" style="margin-top: 0.35rem; margin-bottom: 1rem;">Check off milestones as you complete your purchase:</p>
+          
+          <div class="checklist-timeline" id="checklist-timeline-container">
+            <!-- Populated via app.js -->
+          </div>
+        </div>
+
+        <!-- Required Documents Checklist -->
+        <div class="card" id="required-docs-card" style="margin-top: 1rem;">
+          <h3 class="card-title">Required Documents to Prepare</h3>
+          <div class="checklist-timeline" id="required-docs-container">
+            <!-- Populated via app.js -->
+          </div>
+        </div>
+
+        <!-- Singapore Property Acronym Glossary -->
+        <div class="card" id="property-glossary-card" style="margin-top: 1rem;">
+          <h3 class="card-title">Singapore Property Acronyms & Terms Guide</h3>
+          <div class="form-grid cols-2" id="glossary-container">
+            <!-- Populated via app.js -->
+          </div>
+          <div class="alert-warning-banner" style="margin-top: 1rem;">
+            <span class="alert-icon" aria-hidden="true">ℹ️</span>
+            <p><strong>Legal Notice:</strong> Indicative only. Not a substitute for a CEA-licensed property agent, lawyer, or your bank.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- 5. AMENITIES OVERVIEW & MAP PANEL -->
+      <!-- ================================================================= -->
+      <section class="panel-section" id="panel-amenities" aria-labelledby="heading-amenities">
+        <div class="panel-header">
+          <h2 id="heading-amenities">Neighborhood Amenities & Transit Overview</h2>
+          <p class="panel-subtitle">Explore nearby MRT stations, MOE schools, hawker centres, malls, and parks within walking distance.</p>
+        </div>
+
+        <div class="card" id="amenities-controls-card">
+          <div class="form-grid cols-3">
+            
+            <div class="form-group">
+              <label for="amenity-address-input" class="form-label">Property Location or Postal Code</label>
+              <div class="autocomplete-wrapper">
+                <input type="text" id="amenity-address-input" class="form-input" placeholder="e.g. 560116 or 116 Ang Mo Kio Ave 4" value="116 Ang Mo Kio Ave 4" />
+                <div class="autocomplete-dropdown" id="amenity-dropdown" role="listbox" aria-label="Location suggestions"></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="amenity-radius-select" class="form-label">Search Radius</label>
+              <select id="amenity-radius-select" class="form-select">
+                <option value="500">500 meters (~6 min walk)</option>
+                <option value="1000" selected>1,000 meters / 1 km (~12 min walk)</option>
+                <option value="1500">1,500 meters / 1.5 km</option>
+                <option value="2000">2,000 meters / 2 km</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="justify-content: flex-end;">
+              <button type="button" class="btn btn-primary" id="btn-search-amenities">
+                Find Nearby Amenities
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Nearest MRT Station Hero Banner -->
+        <div class="nearest-mrt-hero" id="nearest-mrt-hero">
+          <div class="mrt-icon-pill" aria-hidden="true">MRT</div>
+          <div>
+            <div style="font-size: 0.8125rem; font-weight: 700; color: #065f46;">NEAREST MASS RAPID TRANSIT</div>
+            <div style="font-size: 1.15rem; font-weight: 800; color: #064e3b;" id="nearest-mrt-name">Mayflower MRT (TE6)</div>
+            <div style="font-size: 0.875rem; color: #047857;" id="nearest-mrt-distance">420m away • Approximately 5 mins walk</div>
+          </div>
+        </div>
+
+        <!-- Amenities Main Layout (Map + List) -->
+        <div class="amenities-layout">
+          
+          <!-- Leaflet Interactive Map -->
+          <div class="map-container" id="map-container">
+            <div id="amenities-map" role="region" aria-label="Interactive map of nearby amenities"></div>
+          </div>
+
+          <!-- Filterable List of Amenities -->
+          <div>
+            <!-- Category Chips Filter -->
+            <div class="amenity-chips-bar" id="amenity-category-chips" role="radiogroup" aria-label="Filter Amenities">
+              <button type="button" class="filter-chip active" data-category="all">All (<span id="count-all">0</span>)</button>
+              <button type="button" class="filter-chip" data-category="mrt">MRT (<span id="count-mrt">0</span>)</button>
+              <button type="button" class="filter-chip" data-category="school">Schools (<span id="count-school">0</span>)</button>
+              <button type="button" class="filter-chip" data-category="hawker">Hawkers (<span id="count-hawker">0</span>)</button>
+              <button type="button" class="filter-chip" data-category="mall">Malls (<span id="count-mall">0</span>)</button>
+              <button type="button" class="filter-chip" data-category="park">Parks (<span id="count-park">0</span>)</button>
+            </div>
+
+            <!-- Loading State -->
+            <div class="state-loading" id="amenities-loading-state" style="display: none;">
+              <div class="spinner" aria-label="Loading amenities"></div>
+              <h3 class="state-title">Locating Amenities & Transit...</h3>
+            </div>
+
+            <!-- Error State -->
+            <div class="state-error" id="amenities-error-state" style="display: none;">
+              <span style="font-size: 2rem;" aria-hidden="true">❌</span>
+              <h3 class="state-title">Amenity Query Failed</h3>
+              <p class="state-desc" id="amenities-error-desc">Unable to retrieve nearby places.</p>
+            </div>
+
+            <!-- List Container -->
+            <div class="amenities-list" id="amenities-list-items">
+              <!-- Populated via app.js -->
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer" id="app-footer">
+      <div class="footer-inner">
+        <div>
+          <strong>Singapore Property Price Advisor</strong> — Designed for prospective home buyers.
+          <div>Data feeds: Data.gov.sg (HDB Resale datastore API), Singapore Land Authority (OneMap API), and IRAS/HDB statutory guidance.</div>
+        </div>
+        <div>
+          <strong>Disclaimer:</strong> Indicative only. Not a substitute for a CEA-licensed property agent, lawyer, or your bank.
+        </div>
+      </div>
+    </footer>
+
+    <!-- Leaflet JS from CDN -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- Application Logic (Vanilla JS, Modular, Cleanly Commented) -->
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "name": "Singapore Property Price Advisor",
+  "description": "An indicative Singapore property price advisor and decision tool for HDB and private properties with real comparable transactions, location comparisons, price trends, document checklists, and amenities overview.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

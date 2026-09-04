@@ -1,0 +1,322 @@
+{
+  "metadata": {
+    "version": "2026.3",
+    "lastReviewed": "September 2026",
+    "sources": [
+      "Housing & Development Board (HDB) Resale Guidelines",
+      "Inland Revenue Authority of Singapore (IRAS) Stamp Duty Rates",
+      "Central Provident Fund (CPF) Board Housing Scheme Rules",
+      "Monetary Authority of Singapore (MAS) Loan-to-Value & TDSR Regulations"
+    ],
+    "disclaimer": "Indicative only. Not a substitute for a CEA-licensed property agent, lawyer, or your bank."
+  },
+  "stampDutyRates": {
+    "bsd": [
+      { "threshold": 180000, "rate": 0.01, "description": "First $180,000: 1%" },
+      { "threshold": 180000, "rate": 0.02, "description": "Next $180,000 ($180k - $360k): 2%" },
+      { "threshold": 640000, "rate": 0.03, "description": "Next $640,000 ($360k - $1M): 3%" },
+      { "threshold": 500000, "rate": 0.04, "description": "Next $500,000 ($1M - $1.5M): 4%" },
+      { "threshold": 1500000, "rate": 0.05, "description": "Next $1,500,000 ($1.5M - $3M): 5%" },
+      { "threshold": null, "rate": 0.06, "description": "Remaining amount above $3,000,000: 6%" }
+    ],
+    "absd": {
+      "citizen": {
+        "firstProperty": { "rate": 0.00, "label": "0% (No ABSD on first residential property)" },
+        "secondProperty": { "rate": 0.20, "label": "20% (Remission available if selling 1st within 6 months as married couple)" },
+        "thirdOrMore": { "rate": 0.30, "label": "30% on third and subsequent properties" }
+      },
+      "pr": {
+        "firstProperty": { "rate": 0.05, "label": "5% on first residential property" },
+        "secondProperty": { "rate": 0.30, "label": "30% on second residential property" },
+        "thirdOrMore": { "rate": 0.35, "label": "35% on third and subsequent properties" }
+      },
+      "foreigner": {
+        "firstProperty": { "rate": 0.60, "label": "60% on all residential purchases" },
+        "secondProperty": { "rate": 0.60, "label": "60% (Nationals of USA, Iceland, Liechtenstein, Norway, Switzerland may qualify for remission under FTA)" },
+        "thirdOrMore": { "rate": 0.60, "label": "60%" }
+      },
+      "entity": {
+        "rate": 0.65, "label": "65% for corporations and trusts"
+      }
+    }
+  },
+  "cpfRules": {
+    "leaseRequirement": "To use maximum CPF OA, the remaining lease on the flat must cover the youngest buyer up to age 95. If remaining lease is under 20 years, no CPF can be used.",
+    "valuationLimit": "Valuation Limit (VL) is the lower of purchase price or property market valuation at purchase. CPF OA can be used up to 100% of VL.",
+    "withdrawalLimit": "Withdrawal Limit (WL) is 120% of VL. Once reached, no further CPF OA can be utilized for the property.",
+    "accruedInterest": "When the property is sold, CPF principal plus 2.5% accrued annual interest must be refunded into your CPF Ordinary Account."
+  },
+  "profiles": {
+    "sc_hdb_resale": {
+      "title": "Singapore Citizen — HDB Resale Purchase",
+      "summary": "Full eligibility for HDB resale flats under Public, Fiancé/Fiancée, or Single Schemes (age 35+). Eligible for CPF Housing Grants up to $80,000 (EHG) and Proximity Housing Grant (up to $30,000).",
+      "citizenshipEligibility": "At least one applicant must be a Singapore Citizen. For singles, must be SC aged 35 or older.",
+      "mopRequirement": "5 years Minimum Occupation Period (MOP) from date of completion before you can sell the flat on the open market or rent out the whole flat.",
+      "estimatedAbsd": "0% for first property (20% if second property without selling first).",
+      "steps": [
+        {
+          "id": "step-1",
+          "title": "Apply for HDB Flat Eligibility (HFE) Letter",
+          "timeline": "Before obtaining Option to Purchase (Valid for 9 months)",
+          "description": "Log into the HDB Flat Portal with Singpass. The HFE letter confirms your purchase eligibility, CPF Housing Grant amounts, and HDB housing loan eligibility.",
+          "mandatory": true
+        },
+        {
+          "id": "step-2",
+          "title": "Secure In-Principle Approval (AIP) if taking Bank Loan",
+          "timeline": "Before signing Option to Purchase",
+          "description": "If taking a commercial bank loan instead of an HDB loan, obtain an AIP from your bank to confirm maximum borrowing limit (up to 75% LTV, subject to 55% TDSR and 30% MSR).",
+          "mandatory": false
+        },
+        {
+          "id": "step-3",
+          "title": "Search, Compare & Inspect Resale Flats",
+          "timeline": "1 to 3 months prior to OTP",
+          "description": "Review recent transacted prices for identical flat models in the town, check remaining lease, ethnic quota (EIP/SPR quota), and calculate Cash-Over-Valuation (COV) buffer.",
+          "mandatory": true
+        },
+        {
+          "id": "step-4",
+          "title": "Obtain Prescribed Option to Purchase (OTP) from Seller",
+          "timeline": "Day 0",
+          "description": "Seller issues official HDB OTP form. Pay Option Fee (between $1 to $1,000 maximum, negotiated with seller, paid in cash).",
+          "mandatory": true
+        },
+        {
+          "id": "step-5",
+          "title": "Submit Request for Value on HDB Flat Portal",
+          "timeline": "By next working day after OTP issuance",
+          "description": "Buyer submits Request for Value on HDB Flat Portal to establish HDB valuation. This determines your maximum CPF usage and loan amount. Any gap above valuation is COV payable in cash.",
+          "mandatory": true
+        },
+        {
+          "id": "step-6",
+          "title": "Exercise Option to Purchase",
+          "timeline": "Within 21 calendar days from OTP date (by 4:00 PM on 21st day)",
+          "description": "Sign the acceptance on the OTP and pay Exercise Fee to seller. Total Option Fee + Exercise Fee cannot exceed $5,000 maximum.",
+          "mandatory": true
+        },
+        {
+          "id": "step-7",
+          "title": "Submit Resale Application to HDB",
+          "timeline": "Within agreed timeframe (usually 7-14 days after exercise)",
+          "description": "Both buyer and seller submit resale application via HDB Flat Portal with all supporting documents. Pay administrative fee ($40 or $80 depending on flat size).",
+          "mandatory": true
+        },
+        {
+          "id": "step-8",
+          "title": "Endorse Resale Documents & Pay Stamp Duty",
+          "timeline": "Around 3 to 4 weeks after application approval",
+          "description": "Accept terms on HDB Flat Portal. Pay Buyer's Stamp Duty (BSD) and legal fees using CPF OA or cash via IRAS/HDB.",
+          "mandatory": true
+        },
+        {
+          "id": "step-9",
+          "title": "Attend Resale Completion Appointment",
+          "timeline": "Approximately 8 weeks from application acceptance",
+          "description": "Attend completion at HDB Hub (or via electronic completion). Collect keys, confirm payment of balance purchase price, and inspect flat.",
+          "mandatory": true
+        }
+      ],
+      "requiredDocuments": [
+        { "name": "Valid Singpass account for all co-buyers & occupiers", "category": "Identity", "description": "Required to log into HDB Flat Portal and IRAS." },
+        { "name": "NRIC (Identity Cards) of all applicants and occupiers", "category": "Identity", "description": "Front and back copies of pink NRIC." },
+        { "name": "Marriage Certificate (if buying under Public/Fiancé Scheme)", "category": "Eligibility", "description": "Proof of marriage or intention to solemnize marriage." },
+        { "name": "Latest 12 to 15 months CPF Contribution History statements", "category": "Financial", "description": "Proof of employment and income continuity for grants and HFE." },
+        { "name": "Latest 3 months computerized payslips / Notice of Assessment (NOA)", "category": "Financial", "description": "IRAS tax assessment statements for current and preceding year." },
+        { "name": "Valid HDB Flat Eligibility (HFE) Letter", "category": "Approval", "description": "Approved HFE letter stating grant entitlement and loan quantum." },
+        { "name": "Signed Option to Purchase (OTP) contract", "category": "Legal", "description": "Prescribed HDB standard form duly signed with serial number." }
+      ]
+    },
+    "pr_hdb_resale": {
+      "title": "Singapore Permanent Resident — HDB Resale Purchase",
+      "summary": "Eligible to purchase resale HDB flats only under the Public Scheme (PR married couple where both have held PR status for at least 3 years, or PR + Citizen couple). PR buyers are NOT eligible for CPF Housing Grants and cannot buy as single PRs.",
+      "citizenshipEligibility": "All PR applicants must have held PR status for at least 3 continuous years. Single PRs are not eligible for HDB resale flats.",
+      "mopRequirement": "5 years Minimum Occupation Period (MOP). Whole flat rental is NOT permitted for SPR households even after MOP.",
+      "estimatedAbsd": "5% ABSD on first residential property; 30% on second property.",
+      "steps": [
+        {
+          "id": "step-1",
+          "title": "Confirm 3-Year SPR Waiting Period & Apply for HFE",
+          "timeline": "Before viewing or signing OTP",
+          "description": "Ensure both PR spouses have held SPR status for at least 36 months. Apply for HFE letter on HDB Flat Portal.",
+          "mandatory": true
+        },
+        {
+          "id": "step-2",
+          "title": "Obtain Bank Loan Approval In-Principle (AIP)",
+          "timeline": "Before signing OTP",
+          "description": "SPR households with no Citizen members are not eligible for HDB housing loans; you must take a commercial bank loan (max 75% LTV, min 5% cash).",
+          "mandatory": true
+        },
+        {
+          "id": "step-3",
+          "title": "Check SPR Quota for Neighborhood / Block",
+          "timeline": "Before negotiating OTP",
+          "description": "HDB enforces the SPR quota (8% for neighborhood, 11% for block) on top of the Ethnic Integration Policy (EIP) quota.",
+          "mandatory": true
+        },
+        {
+          "id": "step-4",
+          "title": "Obtain & Exercise Option to Purchase",
+          "timeline": "21 days validity window",
+          "description": "Pay max $1,000 option fee, request valuation on HDB Flat Portal, then exercise with max $4,000 exercise fee.",
+          "mandatory": true
+        },
+        {
+          "id": "step-5",
+          "title": "Pay BSD and 5% ABSD within 14 days",
+          "timeline": "Within 14 days of OTP exercise",
+          "description": "Permanent Residents pay 5% ABSD on first residential property. Must be paid via CPF OA or cash through IRAS.",
+          "mandatory": true
+        },
+        {
+          "id": "step-6",
+          "title": "Complete HDB Resale Transaction",
+          "timeline": "8 weeks from acceptance",
+          "description": "Finalize completion appointment, pay balance downpayment and take possession.",
+          "mandatory": true
+        }
+      ],
+      "requiredDocuments": [
+        { "name": "Blue NRIC and Re-Entry Permits (REP)", "category": "Identity", "description": "Proof of valid Permanent Resident status for all buyers." },
+        { "name": "Documentary proof of 3-year SPR anniversary", "category": "Eligibility", "description": "Showing entry permit issue date." },
+        { "name": "Official Marriage Certificate", "category": "Eligibility", "description": "Legal marriage certificate translated into English if foreign." },
+        { "name": "Latest 12 months CPF statements and latest NOA", "category": "Financial", "description": "For bank loan assessment and CPF usage." },
+        { "name": "Bank Loan Letter of Offer (LO)", "category": "Financial", "description": "Confirmed mortgage financing from commercial bank." }
+      ]
+    },
+    "sc_private_resale": {
+      "title": "Singapore Citizen — Private Property Resale (Condo / Landed)",
+      "summary": "Unrestricted purchase of private condominiums, apartments, and landed residential property. No HDB income caps or ethnic quotas. Minimum 25% downpayment (at least 5% in cash).",
+      "citizenshipEligibility": "Singapore Citizens can purchase any private condominium, strata landed, or landed property without Land Dealings Approval Unit (LDAU) approval.",
+      "mopRequirement": "No MOP restriction unless you currently own an HDB flat that has not completed its 5-year MOP.",
+      "estimatedAbsd": "0% for first residential property; 20% for second property; 30% for third.",
+      "steps": [
+        {
+          "id": "step-1",
+          "title": "Secure Bank In-Principle Approval (AIP)",
+          "timeline": "1 to 2 weeks before house-hunting",
+          "description": "Establish borrowing capacity under 55% TDSR rules (max 75% LTV, 25-30 year tenure).",
+          "mandatory": true
+        },
+        {
+          "id": "step-2",
+          "title": "Engage a Conveyancing Law Firm",
+          "timeline": "Prior to securing OTP",
+          "description": "Appoint an independent law firm to handle title search, caveats, IRAS stamp duties, and CPF drawdowns.",
+          "mandatory": true
+        },
+        {
+          "id": "step-3",
+          "title": "Issue Option to Purchase (OTP)",
+          "timeline": "Day 0",
+          "description": "Pay 1% Option Fee (in cash/cheque/PayNow) to seller in exchange for private contract OTP.",
+          "mandatory": true
+        },
+        {
+          "id": "step-4",
+          "title": "Property Valuation & Bank Loan Offer",
+          "timeline": "Days 1 to 14",
+          "description": "Bank dispatches panel valuer. Formal Letter of Offer signed with the financing bank.",
+          "mandatory": true
+        },
+        {
+          "id": "step-5",
+          "title": "Exercise Option to Purchase",
+          "timeline": "Within 14 calendar days (standard private OTP)",
+          "description": "Lawyer lodges caveat and pays 4% Exercise Fee to seller's lawyer (total 5% booking fee paid).",
+          "mandatory": true
+        },
+        {
+          "id": "step-6",
+          "title": "Pay Stamp Duties (BSD & any ABSD)",
+          "timeline": "Within 14 calendar days from OTP exercise",
+          "description": "Lawyer remits BSD and ABSD to IRAS via CPF OA or cash.",
+          "mandatory": true
+        },
+        {
+          "id": "step-7",
+          "title": "Completion & Key Handover",
+          "timeline": "8 to 12 weeks from exercise date",
+          "description": "Pay balance 20% downpayment (CPF OA or cash) and loan drawdown. Receive unit keys.",
+          "mandatory": true
+        }
+      ],
+      "requiredDocuments": [
+        { "name": "Pink NRIC for all purchasers", "category": "Identity", "description": "Proof of Singapore citizenship." },
+        { "name": "Latest 3 months payslips & 2 years IRAS Notice of Assessment", "category": "Financial", "description": "Required for credit assessment and mortgage underwriting." },
+        { "name": "Latest CPF Ordinary Account balance statement", "category": "Financial", "description": "To verify funds available for 20% downpayment and stamp duty." },
+        { "name": "Private Option to Purchase contract", "category": "Legal", "description": "Signed by seller's conveyancing solicitor." },
+        { "name": "Bank Mortgage Letter of Offer", "category": "Financial", "description": "Formal accepted bank loan offer." }
+      ]
+    },
+    "foreigner_private": {
+      "title": "Foreign Buyer — Private Condominium Purchase",
+      "summary": "Foreigners can buy private condominiums and apartments without government approval. Landed properties and executive condominiums require special approval from SLA LDAU. ABSD rate is 60%.",
+      "citizenshipEligibility": "Non-residents/Foreigners can freely buy apartments and condominiums. Landed residential requires approval under the Residential Property Act.",
+      "mopRequirement": "No MOP. Units may be rented out immediately upon legal completion.",
+      "estimatedAbsd": "60% ABSD payable on all residential purchases (US Citizens and nationals of Iceland, Liechtenstein, Norway, Switzerland enjoy remission under Free Trade Agreements).",
+      "steps": [
+        {
+          "id": "step-1",
+          "title": "Assess Tax Liability & FTA Remission Eligibility",
+          "timeline": "Prior to committing funds",
+          "description": "Verify whether you are a national of USA or EFTA states to claim ABSD remission. Prepare 60% ABSD liquid capital if standard foreigner.",
+          "mandatory": true
+        },
+        {
+          "id": "step-2",
+          "title": "Engage Conveyancing Solicitor & Bank AIP",
+          "timeline": "Before signing contract",
+          "description": "Obtain bank mortgage approval (foreigners usually capped at 60% to 75% LTV depending on tax residency).",
+          "mandatory": true
+        },
+        {
+          "id": "step-3",
+          "title": "Sign OTP and Pay 1% Option Fee",
+          "timeline": "Day 0",
+          "description": "Pay 1% Option Fee via cashier's order or bank transfer.",
+          "mandatory": true
+        },
+        {
+          "id": "step-4",
+          "title": "Exercise Option with 4% Exercise Fee",
+          "timeline": "Within 14 days",
+          "description": "Conveyancing lawyer executes contract.",
+          "mandatory": true
+        },
+        {
+          "id": "step-5",
+          "title": "Remit BSD + 60% ABSD to IRAS",
+          "timeline": "Within 14 days of OTP exercise",
+          "description": "Mandatory upfront tax payment in cash/bank remittance through your solicitor.",
+          "mandatory": true
+        },
+        {
+          "id": "step-6",
+          "title": "Completion of Sale & Registration",
+          "timeline": "8 to 12 weeks",
+          "description": "Balance settlement and registration with Singapore Land Authority (SLA).",
+          "mandatory": true
+        }
+      ],
+      "requiredDocuments": [
+        { "name": "Valid Passport (at least 6 months validity)", "category": "Identity", "description": "Certified true copy by notary public or solicitor." },
+        { "name": "Proof of residential address abroad/local", "category": "Identity", "description": "Utility bill or bank statement within 3 months." },
+        { "name": "Overseas income tax returns / Audited accounts", "category": "Financial", "description": "Required for Singapore bank mortgage assessment." },
+        { "name": "Proof of FTA nationality certificate (if claiming remission)", "category": "Eligibility", "description": "Passport from US or EFTA country." },
+        { "name": "Source of wealth & AML declaration forms", "category": "Compliance", "description": "Required by Singapore Law Society AML regulations." }
+      ]
+    }
+  },
+  "glossary": [
+    { "term": "HFE (HDB Flat Eligibility)", "definition": "A comprehensive letter from HDB that holistically assesses your eligibility for flat purchase, CPF housing grants, and HDB housing loan." },
+    { "term": "COV (Cash-Over-Valuation)", "definition": "The positive difference between the negotiated sale price and HDB's official market valuation. Must be paid in 100% cash." },
+    { "term": "BSD (Buyer's Stamp Duty)", "definition": "A progressive tax on all property purchases in Singapore, tiered from 1% up to 6% of the purchase price or market value." },
+    { "term": "ABSD (Additional Buyer's Stamp Duty)", "definition": "A tax levied on residential purchases based on citizenship profile and existing property count, designed to curb speculative demand." },
+    { "term": "MOP (Minimum Occupation Period)", "definition": "The period (usually 5 years for standard flats, 10 years for Plus/Prime) during which owners must physically occupy the flat before selling or renting out." },
+    { "term": "TDSR (Total Debt Servicing Ratio)", "definition": "Cap set by MAS limiting total monthly debt repayments (mortgage, car loan, credit card, etc.) to 55% of gross monthly income." },
+    { "term": "MSR (Mortgage Servicing Ratio)", "definition": "Cap set by MAS and HDB limiting monthly mortgage payments for HDB flats and ECs to 30% of gross monthly income." }
+  ]
+}
