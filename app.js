@@ -121,6 +121,11 @@ function initNavigation() {
       tabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
 
+      // Remove active from header create account button if another tab clicked
+      if (headerBtnCreate) {
+        headerBtnCreate.classList.remove('active');
+      }
+
       // Update panel section visibility
       sections.forEach(sec => {
         if (sec.id === targetPanelId) {
@@ -148,13 +153,27 @@ function initNavigation() {
     });
   });
 
-  // Top-right Create Account button in header
-  const headerBtnCreate = document.getElementById('header-btn-create-account');
+  // Top-right Create Account button in header (blue button)
   if (headerBtnCreate) {
     headerBtnCreate.addEventListener('click', () => {
-      const accountTab = document.getElementById('tab-create-account');
-      if (accountTab) {
-        accountTab.click();
+      // Deactivate all navigation tabs
+      tabs.forEach(t => t.classList.remove('active'));
+      headerBtnCreate.classList.add('active');
+
+      // Show Create Account panel
+      sections.forEach(sec => {
+        if (sec.id === 'panel-create-account') {
+          sec.classList.add('active');
+        } else {
+          sec.classList.remove('active');
+        }
+      });
+
+      AppState.activeTab = 'panel-create-account';
+
+      const panel = document.getElementById('panel-create-account');
+      if (panel) {
+        panel.scrollIntoView({ behavior: 'smooth' });
       }
     });
   }
@@ -1787,6 +1806,410 @@ function initAccountModule() {
 }
 
 /* ==========================================================================
+   7. FIND OUR LISTED AGENT DIRECTORY (PLACEHOLDER & VERIFIED AGENTS)
+   ========================================================================== */
+
+const LISTED_AGENTS = [
+  {
+    id: 'agent-1',
+    name: 'Rachel Lim Siew Hui',
+    initials: 'RL',
+    agency: 'PropNex Realty Pte Ltd',
+    agencyLicence: 'L3008022J',
+    ceaNumber: 'R058491C',
+    title: 'Senior Marketing Director',
+    rating: 4.9,
+    reviewsCount: 88,
+    transactionsCount: 142,
+    specialtyCategory: 'hdb',
+    specialtyLabel: 'HDB Resale & Upgraders',
+    towns: ['ANG MO KIO', 'BISHAN', 'SERANGOON', 'TOA PAYOH'],
+    districts: 'D19, D20',
+    phone: '9123 4567',
+    bio: 'Specialized in Ang Mo Kio, Bishan, and Serangoon mature estates. Assisted over 140 families in navigating CPF grants, contra facilities, and seamless upgrading.',
+    tags: ['HDB Resale Expert', 'CPF Housing Grants', 'Mature Estates', 'Top Transactor']
+  },
+  {
+    id: 'agent-2',
+    name: 'David Tan Zhi Wei',
+    initials: 'DT',
+    agency: 'ERA Realty Network Pte Ltd',
+    agencyLicence: 'L3002382K',
+    ceaNumber: 'R024681B',
+    title: 'Associate District Director',
+    rating: 5.0,
+    reviewsCount: 64,
+    transactionsCount: 98,
+    specialtyCategory: 'condo',
+    specialtyLabel: 'Private Condominiums & ECs',
+    towns: ['BEDOK', 'MARINE PARADE', 'GEYLANG', 'PASIR RIS'],
+    districts: 'D15, D16',
+    phone: '9234 5678',
+    bio: 'Over 8 years experience specializing in East Coast and Marine Parade condominiums. Data-grounded asset progression and ABSD mitigation strategies.',
+    tags: ['East Coast Condos', 'Asset Progression', 'ABSD Advisory', '5.0 Star Rated']
+  },
+  {
+    id: 'agent-3',
+    name: 'Nurul Huda Binte Rahim',
+    initials: 'NH',
+    agency: 'Huttons Asia Pte Ltd',
+    agencyLicence: 'L3008899K',
+    ceaNumber: 'R061928D',
+    title: 'Senior Advisory Consultant',
+    rating: 4.9,
+    reviewsCount: 72,
+    transactionsCount: 115,
+    specialtyCategory: 'first-timer',
+    specialtyLabel: 'First-Time Home Buyers',
+    towns: ['WOODLANDS', 'YISHUN', 'SEMBAWANG', 'PUNGGOL'],
+    districts: 'D25, D27',
+    phone: '9345 6789',
+    bio: 'Passionate about guiding young couples and first-generation buyers through transparent budgeting, HDB Flat Eligibility (HFE) letters, and financial safety margins.',
+    tags: ['First-Timer Champion', 'HFE & In-Principle', 'BTO & Resale', 'Zero Stress']
+  },
+  {
+    id: 'agent-4',
+    name: 'Marcus Wong Jun Jie',
+    initials: 'MW',
+    agency: 'OrangeTee & Tie Pte Ltd',
+    agencyLicence: 'L3009250K',
+    ceaNumber: 'R038104J',
+    title: 'Division Vice President',
+    rating: 4.8,
+    reviewsCount: 51,
+    transactionsCount: 82,
+    specialtyCategory: 'luxury',
+    specialtyLabel: 'Prime CCR Luxury Properties',
+    towns: ['CENTRAL AREA', 'BUKIT TIMAH', 'QUEENSTOWN', 'CLEMENTI'],
+    districts: 'D09, D10, D11',
+    phone: '9456 7890',
+    bio: 'Advising high-net-worth individuals and investors on prime core central luxury residences, conservation shophouses, and freehold assets with strong rental yield.',
+    tags: ['Prime CCR', 'D09-D11 Luxury', 'Rental Yield', 'High Net Worth']
+  },
+  {
+    id: 'agent-5',
+    name: 'Serene Chew Mei Ling',
+    initials: 'SC',
+    agency: 'SRI Pte Ltd',
+    agencyLicence: 'L3010738A',
+    ceaNumber: 'R049215E',
+    title: 'Senior Associate Director',
+    rating: 4.9,
+    reviewsCount: 95,
+    transactionsCount: 130,
+    specialtyCategory: 'hdb',
+    specialtyLabel: 'HDB 4-Room & 5-Room Resale',
+    towns: ['SENGKANG', 'PUNGGOL', 'HOUGANG', 'TAMPINES'],
+    districts: 'D19',
+    phone: '9567 8901',
+    bio: 'Punggol and Sengkang specialist. Deep insight into waterfront developments, Punggol Digital District expansion, and MOP upgrader timelines.',
+    tags: ['Punggol Specialist', 'Sengkang Expert', 'MOP Upgrader', 'Quick Match']
+  },
+  {
+    id: 'agent-6',
+    name: 'Kenneth Goh Wei Liang',
+    initials: 'KG',
+    agency: 'PropNex Realty Pte Ltd',
+    agencyLicence: 'L3008022J',
+    ceaNumber: 'R018934H',
+    title: 'Senior Group Division Director',
+    rating: 4.8,
+    reviewsCount: 60,
+    transactionsCount: 110,
+    specialtyCategory: 'condo',
+    specialtyLabel: 'Jurong Lake District & West Region',
+    towns: ['JURONG EAST', 'JURONG WEST', 'CLEMENTI', 'BUKIT BATOK', 'BUKIT PANJANG', 'CHOA CHU KANG'],
+    districts: 'D22, D05',
+    phone: '9678 9012',
+    bio: 'Over a decade of West region market experience. Focused on the 2nd CBD Jurong Lake District masterplan transformation, HDB contra procedures, and Clementi family estates.',
+    tags: ['Jurong Masterplan', 'West District', 'HDB Contra', 'Senior Mentor']
+  }
+];
+
+/**
+ * Initializes the Find Our Listed Agent module:
+ * - Real-time filtering by keyword, town, agency, and property specialty
+ * - Dynamic card rendering with CEA credentials and contact actions
+ * - Interactive agent profile and inquiry modal
+ * - Shortcut link to register as an agent in the Create Account panel
+ */
+function initFindAgentModule() {
+  const grid = document.getElementById('agent-directory-grid');
+  const searchInput = document.getElementById('agent-search-input');
+  const townSelect = document.getElementById('agent-filter-town');
+  const agencySelect = document.getElementById('agent-filter-agency');
+  const specialtySelect = document.getElementById('agent-filter-specialty');
+  const btnReset = document.getElementById('btn-reset-agent-filters');
+  const btnGotoRegister = document.getElementById('btn-goto-agent-register');
+  const modal = document.getElementById('agent-contact-modal');
+  const modalClose = document.getElementById('btn-close-agent-modal');
+  const modalName = document.getElementById('modal-agent-name');
+  const modalBody = document.getElementById('modal-agent-body');
+
+  if (!grid) return;
+
+  function renderAgents() {
+    const query = (searchInput?.value || '').toLowerCase().trim();
+    const town = townSelect?.value || 'all';
+    const agency = agencySelect?.value || 'all';
+    const specialty = specialtySelect?.value || 'all';
+
+    const filtered = LISTED_AGENTS.filter(agent => {
+      // Keyword match
+      if (query) {
+        const matchName = agent.name.toLowerCase().includes(query);
+        const matchCea = agent.ceaNumber.toLowerCase().includes(query);
+        const matchAgency = agent.agency.toLowerCase().includes(query);
+        const matchBio = agent.bio.toLowerCase().includes(query);
+        const matchTags = agent.tags.some(t => t.toLowerCase().includes(query));
+        if (!matchName && !matchCea && !matchAgency && !matchBio && !matchTags) {
+          return false;
+        }
+      }
+
+      // Town filter
+      if (town !== 'all' && !agent.towns.includes(town)) {
+        return false;
+      }
+
+      // Agency filter
+      if (agency !== 'all' && agent.agency !== agency) {
+        return false;
+      }
+
+      // Specialty filter
+      if (specialty !== 'all' && agent.specialtyCategory !== specialty) {
+        return false;
+      }
+
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; padding: 3rem 1.5rem; text-align: center; background-color: var(--sleek-surface); border: 1px solid var(--sleek-border-subtle); border-radius: var(--radius-lg);">
+          <span class="material-symbols-outlined" style="font-size: 3rem; color: var(--sleek-text-muted); margin-bottom: 0.5rem;" aria-hidden="true">person_search</span>
+          <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--sleek-text-primary); margin-bottom: 0.35rem;">No listed agents match your filter criteria</h3>
+          <p style="font-size: 0.875rem; color: var(--sleek-text-secondary); max-width: 480px; margin: 0 auto 1.25rem auto;">Try selecting 'All Singapore Towns' or resetting the agency filter to see all verified property salespersons.</p>
+          <button type="button" id="btn-empty-reset-filters" class="btn-reset-agent-filters" style="margin: 0 auto;">
+            <span class="material-symbols-outlined" style="font-size: 16px;" aria-hidden="true">restart_alt</span>
+            <span>Reset All Filters</span>
+          </button>
+        </div>
+      `;
+
+      const emptyReset = document.getElementById('btn-empty-reset-filters');
+      if (emptyReset) {
+        emptyReset.addEventListener('click', () => {
+          if (btnReset) btnReset.click();
+        });
+      }
+      return;
+    }
+
+    grid.innerHTML = '';
+    filtered.forEach(agent => {
+      const card = document.createElement('div');
+      card.className = 'agent-card';
+      card.innerHTML = `
+        <div class="agent-card-header">
+          <div class="agent-avatar-circle">${escapeHtml(agent.initials)}</div>
+          <div class="agent-info-meta">
+            <div class="agent-name-title">
+              <span>${escapeHtml(agent.name)}</span>
+              <span class="material-symbols-outlined agent-verified-icon" title="CEA Verified" aria-hidden="true">verified</span>
+            </div>
+            <div class="agent-agency-line">${escapeHtml(agent.title)} • ${escapeHtml(agent.agency)}</div>
+            <div class="agent-cea-tag">
+              <span class="material-symbols-outlined" style="font-size: 14px;" aria-hidden="true">badge</span>
+              <span>CEA: ${escapeHtml(agent.ceaNumber)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="agent-metrics-bar">
+          <div class="agent-metric-item">
+            <span class="material-symbols-outlined agent-rating-star" aria-hidden="true">star</span>
+            <strong>${agent.rating.toFixed(1)}</strong>
+            <span style="color: var(--sleek-text-muted); font-size: 0.75rem;">(${agent.reviewsCount} reviews)</span>
+          </div>
+          <span style="color: var(--sleek-border-strong);">|</span>
+          <div class="agent-metric-item">
+            <span class="material-symbols-outlined" style="font-size: 16px; color: var(--sleek-accent);" aria-hidden="true">task_alt</span>
+            <span><strong>${agent.transactionsCount}</strong> deals closed</span>
+          </div>
+        </div>
+
+        <div class="agent-specialty-chips">
+          <span class="agent-chip accent-chip">${escapeHtml(agent.specialtyLabel)}</span>
+          ${agent.tags.slice(1, 3).map(tag => `<span class="agent-chip">${escapeHtml(tag)}</span>`).join('')}
+          <span class="agent-chip" style="background-color: #eff6ff; color: #1e40af;">${escapeHtml(agent.districts)}</span>
+        </div>
+
+        <p class="agent-bio-excerpt">${escapeHtml(agent.bio)}</p>
+
+        <div class="agent-card-actions">
+          <button type="button" class="btn-agent-contact-wa" data-agent-id="${agent.id}" aria-label="Contact ${escapeHtml(agent.name)} on WhatsApp">
+            <span class="material-symbols-outlined" style="font-size: 16px;" aria-hidden="true">chat</span>
+            <span>WhatsApp</span>
+          </button>
+          <button type="button" class="btn-agent-details" data-agent-id="${agent.id}" aria-label="View profile of ${escapeHtml(agent.name)}">
+            <span class="material-symbols-outlined" style="font-size: 16px;" aria-hidden="true">info</span>
+            <span>View Profile</span>
+          </button>
+        </div>
+      `;
+
+      // Event listeners for card buttons
+      const btnWa = card.querySelector('.btn-agent-contact-wa');
+      if (btnWa) {
+        btnWa.addEventListener('click', () => {
+          openAgentContact(agent, 'whatsapp');
+        });
+      }
+
+      const btnDetails = card.querySelector('.btn-agent-details');
+      if (btnDetails) {
+        btnDetails.addEventListener('click', () => {
+          openAgentContact(agent, 'profile');
+        });
+      }
+
+      grid.appendChild(card);
+    });
+  }
+
+  function openAgentContact(agent, mode) {
+    if (!modal || !modalName || !modalBody) return;
+
+    modalName.textContent = agent.name;
+    const cleanPhone = agent.phone.replace(/\s+/g, '');
+
+    modalBody.innerHTML = `
+      <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.25rem;">
+        <div class="agent-avatar-circle" style="width: 60px; height: 60px; font-size: 1.25rem;">${escapeHtml(agent.initials)}</div>
+        <div>
+          <h4 style="font-size: 1.125rem; font-weight: 700; color: var(--sleek-text-primary); margin-bottom: 0.2rem;">
+            ${escapeHtml(agent.name)} <span class="agent-cea-tag" style="vertical-align: middle;">${escapeHtml(agent.ceaNumber)}</span>
+          </h4>
+          <div style="font-size: 0.845rem; color: var(--sleek-text-secondary);">${escapeHtml(agent.title)}</div>
+          <div style="font-size: 0.8125rem; font-weight: 600; color: var(--sleek-accent);">${escapeHtml(agent.agency)} (${escapeHtml(agent.agencyLicence)})</div>
+        </div>
+      </div>
+
+      <div style="background-color: var(--sleek-surface-subtle); padding: 0.85rem 1rem; border-radius: 8px; margin-bottom: 1.25rem; font-size: 0.845rem; line-height: 1.5;">
+        ${escapeHtml(agent.bio)}
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem; font-size: 0.8125rem;">
+        <div style="padding: 0.65rem; background: #ffffff; border: 1px solid var(--sleek-border-subtle); border-radius: 6px;">
+          <div style="color: var(--sleek-text-muted); font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Focus Planning Areas</div>
+          <div style="font-weight: 600; color: var(--sleek-text-primary); margin-top: 0.15rem;">${escapeHtml(agent.towns.slice(0, 3).join(', '))}</div>
+        </div>
+        <div style="padding: 0.65rem; background: #ffffff; border: 1px solid var(--sleek-border-subtle); border-radius: 6px;">
+          <div style="color: var(--sleek-text-muted); font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Direct Contact</div>
+          <div style="font-weight: 600; color: #10b981; margin-top: 0.15rem;">+65 ${escapeHtml(agent.phone)}</div>
+        </div>
+      </div>
+
+      <form id="agent-direct-enquiry-form" style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <div>
+          <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--sleek-text-secondary); display: block; margin-bottom: 0.3rem;">
+            Send Inquiry / Valuation Request
+          </label>
+          <textarea id="agent-enquiry-msg" rows="3" style="width: 100%; padding: 0.65rem; font-family: var(--font-family-body); font-size: 0.875rem; border: 1px solid var(--sleek-border-strong); border-radius: var(--radius-sm);" placeholder="Hi ${escapeHtml(agent.name.split(' ')[0])}, I would like to consult on property prices and valuations in ${escapeHtml(agent.towns[0])}..."></textarea>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.25rem;">
+          <a href="https://wa.me/65${cleanPhone}?text=${encodeURIComponent(`Hi ${agent.name}, I found your profile on Dream Home Singapore Property Advisor and would like to inquire about properties in ${agent.towns[0]}.`)}" target="_blank" rel="noopener noreferrer" class="btn-agent-contact-wa" style="text-decoration: none; padding: 0.75rem;">
+            <span class="material-symbols-outlined" style="font-size: 18px;" aria-hidden="true">chat</span>
+            <span>Open WhatsApp</span>
+          </a>
+          <button type="submit" class="btn-agent-details" style="padding: 0.75rem; background: var(--sleek-accent); color: #ffffff; border: none;">
+            <span class="material-symbols-outlined" style="font-size: 18px;" aria-hidden="true">send</span>
+            <span>Submit Inquiry</span>
+          </button>
+        </div>
+      </form>
+    `;
+
+    const form = modalBody.querySelector('#agent-direct-enquiry-form');
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert(`Your message has been dispatched to ${agent.name} (${agent.agency}). The agent will contact you via your registered details shortly.`);
+        closeModal();
+      });
+    }
+
+    modal.style.display = 'flex';
+  }
+
+  function closeModal() {
+    if (modal) modal.style.display = 'none';
+  }
+
+  if (modalClose) {
+    modalClose.addEventListener('click', closeModal);
+  }
+
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal && modal.style.display === 'flex') {
+      closeModal();
+    }
+  });
+
+  // Filter Listeners
+  if (searchInput) {
+    searchInput.addEventListener('input', debounce(renderAgents, 200));
+  }
+  if (townSelect) {
+    townSelect.addEventListener('change', renderAgents);
+  }
+  if (agencySelect) {
+    agencySelect.addEventListener('change', renderAgents);
+  }
+  if (specialtySelect) {
+    specialtySelect.addEventListener('change', renderAgents);
+  }
+
+  if (btnReset) {
+    btnReset.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      if (townSelect) townSelect.value = 'all';
+      if (agencySelect) agencySelect.value = 'all';
+      if (specialtySelect) specialtySelect.value = 'all';
+      renderAgents();
+    });
+  }
+
+  // "Register as an Agent" CTA button
+  if (btnGotoRegister) {
+    btnGotoRegister.addEventListener('click', () => {
+      const headerBtnCreate = document.getElementById('header-btn-create-account');
+      if (headerBtnCreate) {
+        headerBtnCreate.click();
+      }
+      // Switch directly to Real Estate Agent registration form
+      setTimeout(() => {
+        const btnAgentForm = document.getElementById('btn-show-agent-form');
+        if (btnAgentForm) btnAgentForm.click();
+        const sectionAgent = document.getElementById('section-agent-account');
+        if (sectionAgent) sectionAgent.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    });
+  }
+
+  // Initial render
+  renderAgents();
+}
+
+/* ==========================================================================
    INITIALIZATION
    ========================================================================== */
 
@@ -1799,4 +2222,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initDocumentationAdvisor();
   initAmenities();
   initAccountModule();
+  initFindAgentModule();
 });

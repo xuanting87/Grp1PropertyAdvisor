@@ -73,9 +73,9 @@
             <span class="material-symbols-outlined nav-tab-icon" aria-hidden="true">map</span>
             <span class="nav-tab-label">Amenities & Map</span>
           </button>
-          <button type="button" class="nav-tab" id="tab-create-account" data-panel="panel-create-account" aria-label="Create Account Tab">
-            <span class="material-symbols-outlined nav-tab-icon" aria-hidden="true">person_add</span>
-            <span class="nav-tab-label">Create Account</span>
+          <button type="button" class="nav-tab nav-tab-yellow" id="tab-find-agent" data-panel="panel-find-agent" aria-label="Find Our Listed Agent Tab">
+            <span class="material-symbols-outlined nav-tab-icon" aria-hidden="true">support_agent</span>
+            <span class="nav-tab-label">Find Our Listed Agent</span>
           </button>
         </nav>
       </div>
@@ -753,7 +753,128 @@
       </section>
 
       <!-- ================================================================= -->
-      <!-- 6. CREATE ACCOUNT PANEL -->
+      <!-- 6. FIND OUR LISTED AGENT PANEL (PLACEHOLDER) -->
+      <!-- ================================================================= -->
+      <section class="panel-section" id="panel-find-agent" aria-labelledby="heading-find-agent">
+        <div class="panel-header">
+          <div class="panel-header-badge agent-badge-pill-yellow">
+            <span class="material-symbols-outlined" style="font-size: 18px; color: #b45309;" aria-hidden="true">verified</span>
+            <span>CEA Certified Advisors Directory</span>
+          </div>
+          <h2 id="heading-find-agent">Find Our Listed Real Estate Agents</h2>
+          <p class="panel-subtitle">Connect directly with top-rated, CEA-registered property salespersons across Singapore. Filter by planning town, licensed agency, or property specialty for transparent, data-grounded guidance.</p>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="agent-search-toolbar">
+          <div class="agent-search-box">
+            <span class="material-symbols-outlined search-icon" aria-hidden="true">search</span>
+            <input type="text" id="agent-search-input" class="agent-search-input" placeholder="Search by agent name, CEA reg no. (e.g. R058491C), or agency..." aria-label="Search Listed Agents">
+          </div>
+          <div class="agent-filter-row">
+            <div class="agent-filter-col">
+              <label for="agent-filter-town" class="agent-filter-label">Planning Town</label>
+              <select id="agent-filter-town" class="agent-filter-select">
+                <option value="all">All Singapore Towns</option>
+                <option value="ANG MO KIO">Ang Mo Kio</option>
+                <option value="BEDOK">Bedok</option>
+                <option value="BISHAN">Bishan</option>
+                <option value="BUKIT BATOK">Bukit Batok</option>
+                <option value="BUKIT MERAH">Bukit Merah</option>
+                <option value="BUKIT PANJANG">Bukit Panjang</option>
+                <option value="BUKIT TIMAH">Bukit Timah</option>
+                <option value="CENTRAL AREA">Central Area</option>
+                <option value="CHOA CHU KANG">Choa Chu Kang</option>
+                <option value="CLEMENTI">Clementi</option>
+                <option value="GEYLANG">Geylang</option>
+                <option value="HOUGANG">Hougang</option>
+                <option value="JURONG EAST">Jurong East</option>
+                <option value="JURONG WEST">Jurong West</option>
+                <option value="KALLANG/WHAMPOA">Kallang / Whampoa</option>
+                <option value="MARINE PARADE">Marine Parade</option>
+                <option value="PASIR RIS">Pasir Ris</option>
+                <option value="PUNGGOL">Punggol</option>
+                <option value="QUEENSTOWN">Queenstown</option>
+                <option value="SEMBAWANG">Sembawang</option>
+                <option value="SENGKANG">Sengkang</option>
+                <option value="SERANGOON">Serangoon</option>
+                <option value="TAMPINES">Tampines</option>
+                <option value="TOA PAYOH">Toa Payoh</option>
+                <option value="WOODLANDS">Woodlands</option>
+                <option value="YISHUN">Yishun</option>
+              </select>
+            </div>
+            <div class="agent-filter-col">
+              <label for="agent-filter-agency" class="agent-filter-label">Licensed Estate Agency</label>
+              <select id="agent-filter-agency" class="agent-filter-select">
+                <option value="all">All Estate Agencies</option>
+                <option value="PropNex Realty Pte Ltd">PropNex Realty (L3008022J)</option>
+                <option value="ERA Realty Network Pte Ltd">ERA Realty Network (L3002382K)</option>
+                <option value="Huttons Asia Pte Ltd">Huttons Asia (L3008899K)</option>
+                <option value="OrangeTee & Tie Pte Ltd">OrangeTee & Tie (L3009250K)</option>
+                <option value="SRI Pte Ltd">SRI (L3010738A)</option>
+              </select>
+            </div>
+            <div class="agent-filter-col">
+              <label for="agent-filter-specialty" class="agent-filter-label">Advisory Focus</label>
+              <select id="agent-filter-specialty" class="agent-filter-select">
+                <option value="all">All Specialties</option>
+                <option value="hdb">HDB Resale & Upgraders</option>
+                <option value="condo">Private Condominiums & ECs</option>
+                <option value="first-timer">First-Time Home Buyers</option>
+                <option value="luxury">Prime CCR Luxury Properties</option>
+              </select>
+            </div>
+            <div class="agent-filter-actions">
+              <button type="button" id="btn-reset-agent-filters" class="btn-reset-agent-filters">
+                <span class="material-symbols-outlined" style="font-size: 16px;" aria-hidden="true">restart_alt</span>
+                <span>Reset Filters</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Directory Agent Cards Grid -->
+        <div class="agent-directory-grid" id="agent-directory-grid">
+          <!-- Dynamically populated and filtered via app.js -->
+        </div>
+
+        <!-- Agent Registration Invitation Banner -->
+        <div class="agent-invitation-banner">
+          <div class="agent-invitation-content">
+            <div class="agent-invitation-icon">
+              <span class="material-symbols-outlined" style="font-size: 32px; color: #b45309;" aria-hidden="true">workspace_premium</span>
+            </div>
+            <div>
+              <h3 class="agent-invitation-title">Are you a CEA-Licensed Real Estate Salesperson?</h3>
+              <p class="agent-invitation-desc">Join our verified advisor directory to connect with active Singapore home buyers researching transaction data and price valuations.</p>
+            </div>
+          </div>
+          <button type="button" class="btn-join-directory" id="btn-goto-agent-register">
+            <span class="material-symbols-outlined" style="font-size: 18px;" aria-hidden="true">person_add</span>
+            <span>Register as an Agent</span>
+          </button>
+        </div>
+
+        <!-- Agent Contact Modal Dialog -->
+        <div class="agent-modal-backdrop" id="agent-contact-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-agent-name">
+          <div class="agent-modal-card">
+            <div class="agent-modal-header">
+              <div class="agent-modal-title-wrap">
+                <span class="material-symbols-outlined" style="color: #2563eb; font-size: 22px;" aria-hidden="true">support_agent</span>
+                <h3 id="modal-agent-name" class="agent-modal-title">Agent Contact</h3>
+              </div>
+              <button type="button" class="agent-modal-close" id="btn-close-agent-modal" aria-label="Close modal">✕</button>
+            </div>
+            <div class="agent-modal-body" id="modal-agent-body">
+              <!-- Content populated via app.js -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- 7. CREATE ACCOUNT PANEL -->
       <!-- ================================================================= -->
       <section class="panel-section" id="panel-create-account" aria-labelledby="heading-create-account">
         <div class="panel-header">
