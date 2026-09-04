@@ -40,8 +40,14 @@
               <span class="brand-tagline">Singapore Property Price Advisor • Real Market Insights</span>
             </div>
           </div>
-          <div class="official-badge" role="status">
-            <span aria-hidden="true">●</span> Data.gov.sg & OneMap Live
+          <div class="header-actions">
+            <div class="official-badge" role="status">
+              <span aria-hidden="true">●</span> Data.gov.sg & OneMap Live
+            </div>
+            <button type="button" class="header-create-btn" id="header-btn-create-account" data-panel="panel-create-account" aria-label="Create Account">
+              <span class="material-symbols-outlined" style="font-size: 18px;" aria-hidden="true">person_add</span>
+              <span id="header-btn-account-label">Create Account</span>
+            </button>
           </div>
         </div>
 
@@ -66,6 +72,10 @@
           <button type="button" class="nav-tab" id="tab-amenities" data-panel="panel-amenities" aria-label="Amenities and Map Tab">
             <span class="material-symbols-outlined nav-tab-icon" aria-hidden="true">map</span>
             <span class="nav-tab-label">Amenities & Map</span>
+          </button>
+          <button type="button" class="nav-tab" id="tab-create-account" data-panel="panel-create-account" aria-label="Create Account Tab">
+            <span class="material-symbols-outlined nav-tab-icon" aria-hidden="true">person_add</span>
+            <span class="nav-tab-label">Create Account</span>
           </button>
         </nav>
       </div>
@@ -737,6 +747,357 @@
             <div class="amenities-list" id="amenities-list-items">
               <!-- Populated via app.js -->
             </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- 6. CREATE ACCOUNT PANEL -->
+      <!-- ================================================================= -->
+      <section class="panel-section" id="panel-create-account" aria-labelledby="heading-create-account">
+        <div class="panel-header">
+          <div class="panel-header-badge">
+            <span class="material-symbols-outlined" style="font-size: 18px; color: var(--sleek-accent);">badge</span>
+            <span>Singapore Property Network</span>
+          </div>
+          <h2 id="heading-create-account">Create Your Account</h2>
+          <p class="panel-subtitle">Select whether you are searching for your home as a buyer, or advising clients as a CEA-licensed real estate salesperson.</p>
+        </div>
+
+        <!-- Account Profile Switcher Pill Tabs -->
+        <div class="account-role-switcher" role="tablist" aria-label="Account Types">
+          <button type="button" class="account-role-btn active" id="btn-show-buyer-form" role="tab" aria-selected="true">
+            <span class="material-symbols-outlined">home</span>
+            <span>Home Buyer Account</span>
+          </button>
+          <button type="button" class="account-role-btn" id="btn-show-agent-form" role="tab" aria-selected="false">
+            <span class="material-symbols-outlined">real_estate_agent</span>
+            <span>Real Estate Agent (CEA)</span>
+          </button>
+          <button type="button" class="account-role-btn" id="btn-show-both-forms" role="tab" aria-selected="false">
+            <span class="material-symbols-outlined">view_column</span>
+            <span>Side-by-Side View</span>
+          </button>
+        </div>
+
+        <!-- Active Logged-In Profile Card (Shown when an account exists) -->
+        <div class="card account-status-card" id="account-logged-in-card" style="display: none;">
+          <div class="account-status-header">
+            <div class="account-avatar" id="account-avatar-icon">
+              <span class="material-symbols-outlined" style="font-size: 32px;">verified_user</span>
+            </div>
+            <div style="flex: 1;">
+              <div class="account-badge-pill" id="account-type-badge">Verified Home Buyer</div>
+              <h3 id="account-user-name" style="font-size: 1.35rem; margin-top: 4px; font-weight: 700;">User Name</h3>
+              <p id="account-user-email" style="font-size: 0.875rem; color: var(--sleek-text-muted);">user@example.com</p>
+            </div>
+            <div class="account-status-tag">
+              <span class="status-dot"></span> Active Session
+            </div>
+          </div>
+          <div class="account-details-grid" id="account-details-content">
+            <!-- Populated via app.js -->
+          </div>
+          <div class="account-actions-row">
+            <button type="button" class="btn btn-primary" id="btn-account-goto-advisor">
+              <span class="material-symbols-outlined" style="font-size: 18px;">calculate</span>
+              <span>Explore Price Advisor</span>
+            </button>
+            <button type="button" class="btn btn-secondary" id="btn-account-sign-out">
+              <span class="material-symbols-outlined" style="font-size: 18px;">logout</span>
+              <span>Sign Out / Switch Account</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Two Registration Sections Container -->
+        <div class="account-forms-container show-buyer" id="account-forms-wrapper">
+          
+          <!-- ============================================================= -->
+          <!-- SECTION 1: HOME BUYER ACCOUNT CREATION -->
+          <!-- ============================================================= -->
+          <div class="card account-card" id="section-buyer-account">
+            <div class="account-card-header buyer-theme">
+              <div class="account-card-icon-wrap buyer-icon">
+                <span class="material-symbols-outlined">home</span>
+              </div>
+              <div>
+                <div class="account-role-pill buyer-pill">Home Buyer Registration</div>
+                <h3 class="account-card-title">Looking to Buy a Home in Singapore</h3>
+                <p class="account-card-desc">For individuals & families purchasing an HDB resale flat or private condominium. Save searches, receive fair value alerts, and calculate CPF grants.</p>
+              </div>
+            </div>
+
+            <div class="account-benefits-list">
+              <div class="benefit-item">
+                <span class="material-symbols-outlined check-icon">check_circle</span>
+                <span>Track verified comparable resale transactions & fair market ranges</span>
+              </div>
+              <div class="benefit-item">
+                <span class="material-symbols-outlined check-icon">check_circle</span>
+                <span>Save preferred Singapore towns & compare side-by-side amenities</span>
+              </div>
+              <div class="benefit-item">
+                <span class="material-symbols-outlined check-icon">check_circle</span>
+                <span>Enhanced CPF Housing Grant & In-Principle Approval (IPA) tracking</span>
+              </div>
+            </div>
+
+            <!-- Home Buyer Form -->
+            <form id="form-buyer-account" novalidate>
+              <div class="form-grid cols-2">
+                <div class="form-group">
+                  <label for="buyer-fullname" class="form-label">Full Name <span class="required">*</span></label>
+                  <input type="text" id="buyer-fullname" class="form-input" placeholder="e.g. Tan Wei Ming" required />
+                </div>
+                <div class="form-group">
+                  <label for="buyer-email" class="form-label">Email Address <span class="required">*</span></label>
+                  <input type="email" id="buyer-email" class="form-input" placeholder="e.g. weiming.tan@gmail.com" required />
+                </div>
+              </div>
+
+              <div class="form-grid cols-2">
+                <div class="form-group">
+                  <label for="buyer-phone" class="form-label">Mobile Contact (+65) <span class="required">*</span></label>
+                  <div class="phone-input-wrap">
+                    <span class="country-code">+65</span>
+                    <input type="tel" id="buyer-phone" class="form-input phone-field" placeholder="8123 4567" maxlength="8" required />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="buyer-type" class="form-label">Buyer Eligibility Profile <span class="required">*</span></label>
+                  <select id="buyer-type" class="form-select" required>
+                    <option value="first-timer" selected>First-Timer Citizen (Eligible for Enhanced CPF Grant)</option>
+                    <option value="second-timer">Second-Timer / HDB Upgrader</option>
+                    <option value="single-citizen">Single Citizen (35+ Singles Scheme)</option>
+                    <option value="pr-household">Permanent Resident (PR) Household</option>
+                    <option value="foreigner">Foreigner / Private Property Investor</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-grid cols-2">
+                <div class="form-group">
+                  <label for="buyer-property-interest" class="form-label">Target Property Type <span class="required">*</span></label>
+                  <select id="buyer-property-interest" class="form-select" required>
+                    <option value="HDB 3-Room">HDB 3-Room Resale</option>
+                    <option value="HDB 4-Room" selected>HDB 4-Room Resale</option>
+                    <option value="HDB 5-Room / Executive">HDB 5-Room / Executive Flat</option>
+                    <option value="Private Condo (Mass OCR)">Private Condo (Mass OCR)</option>
+                    <option value="Private Condo (Prime CCR/RCR)">Private Condo (Prime CCR / RCR)</option>
+                    <option value="Landed Residential">Landed Residential</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="buyer-budget" class="form-label">Estimated Budget Range <span class="required">*</span></label>
+                  <select id="buyer-budget" class="form-select" required>
+                    <option value="Under $500,000">Under $500,000</option>
+                    <option value="$500,000 – $700,000" selected>$500,000 – $700,000</option>
+                    <option value="$700,000 – $900,000">$700,000 – $900,000</option>
+                    <option value="$900,000 – $1,200,000">$900,000 – $1,200,000</option>
+                    <option value="$1,200,000 – $1,600,000">$1,200,000 – $1,600,000</option>
+                    <option value="Above $1,600,000">Above $1,600,000</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-grid cols-2">
+                <div class="form-group">
+                  <label for="buyer-preferred-town" class="form-label">Primary Preferred Town</label>
+                  <select id="buyer-preferred-town" class="form-select">
+                    <option value="ANG MO KIO" selected>Ang Mo Kio</option>
+                    <option value="BEDOK">Bedok</option>
+                    <option value="BISHAN">Bishan</option>
+                    <option value="BUKIT BATOK">Bukit Batok</option>
+                    <option value="BUKIT MERAH">Bukit Merah</option>
+                    <option value="BUKIT PANJANG">Bukit Panjang</option>
+                    <option value="BUKIT TIMAH">Bukit Timah</option>
+                    <option value="CENTRAL AREA">Central Area</option>
+                    <option value="CHOA CHU KANG">Choa Chu Kang</option>
+                    <option value="CLEMENTI">Clementi</option>
+                    <option value="GEYLANG">Geylang</option>
+                    <option value="HOUGANG">Hougang</option>
+                    <option value="JURONG EAST">Jurong East</option>
+                    <option value="JURONG WEST">Jurong West</option>
+                    <option value="KALLANG/WHAMPOA">Kallang/Whampoa</option>
+                    <option value="MARINE PARADE">Marine Parade</option>
+                    <option value="PASIR RIS">Pasir Ris</option>
+                    <option value="PUNGGOL">Punggol</option>
+                    <option value="QUEENSTOWN">Queenstown</option>
+                    <option value="SEMBAWANG">Sembawang</option>
+                    <option value="SENGKANG">Sengkang</option>
+                    <option value="SERANGOON">Serangoon</option>
+                    <option value="TAMPINES">Tampines</option>
+                    <option value="TOA PAYOH">Toa Payoh</option>
+                    <option value="WOODLANDS">Woodlands</option>
+                    <option value="YISHUN">Yishun</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="buyer-ipa-status" class="form-label">Bank IPA / HDB HFE Status</label>
+                  <select id="buyer-ipa-status" class="form-select">
+                    <option value="Not yet applied">Not Yet Applied</option>
+                    <option value="In Progress (Submitted)">In Progress (Submitted)</option>
+                    <option value="Approved & Ready" selected>Approved & Ready</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-grid cols-2">
+                <div class="form-group">
+                  <label for="buyer-password" class="form-label">Password <span class="required">*</span></label>
+                  <input type="password" id="buyer-password" class="form-input" placeholder="At least 8 characters" minlength="8" required />
+                </div>
+                <div class="form-group">
+                  <label for="buyer-confirm-password" class="form-label">Confirm Password <span class="required">*</span></label>
+                  <input type="password" id="buyer-confirm-password" class="form-input" placeholder="Re-enter password" minlength="8" required />
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-top: 0.5rem;">
+                <label class="checkbox-label" for="buyer-terms-agree">
+                  <input type="checkbox" id="buyer-terms-agree" required />
+                  <span>I agree to the <a href="#global-disclaimer" class="form-link">Terms of Service & Privacy Policy</a>. I understand that property price ranges are indicative government datastore references.</span>
+                </label>
+              </div>
+
+              <div class="form-actions" style="margin-top: 1rem;">
+                <button type="submit" class="btn btn-primary" id="btn-submit-buyer" style="width: 100%; justify-content: center;">
+                  <span class="material-symbols-outlined">person_add</span>
+                  <span>Create Home Buyer Account</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- ============================================================= -->
+          <!-- SECTION 2: REAL ESTATE AGENT ACCOUNT CREATION -->
+          <!-- ============================================================= -->
+          <div class="card account-card" id="section-agent-account">
+            <div class="account-card-header agent-theme">
+              <div class="account-card-icon-wrap agent-icon">
+                <span class="material-symbols-outlined">real_estate_agent</span>
+              </div>
+              <div>
+                <div class="account-role-pill agent-pill">CEA Real Estate Agent Registration</div>
+                <h3 class="account-card-title">Licensed Property Salesperson (RES)</h3>
+                <p class="account-card-desc">For CEA-registered property salespersons and estate agency advisors. Access client-ready market comparisons, price trend exports, and official API tools.</p>
+              </div>
+            </div>
+
+            <div class="account-benefits-list">
+              <div class="benefit-item">
+                <span class="material-symbols-outlined check-icon">check_circle</span>
+                <span>CEA registration verification & certified professional advisor profile</span>
+              </div>
+              <div class="benefit-item">
+                <span class="material-symbols-outlined check-icon">check_circle</span>
+                <span>Official URA private residential & HDB resale comparable exports</span>
+              </div>
+              <div class="benefit-item">
+                <span class="material-symbols-outlined check-icon">check_circle</span>
+                <span>Client presentation mode with historical price percentiles & SLA maps</span>
+              </div>
+            </div>
+
+            <!-- Real Estate Agent Form -->
+            <form id="form-agent-account" novalidate>
+              <div class="form-grid cols-2">
+                <div class="form-group">
+                  <label for="agent-fullname" class="form-label">Full Name (as registered with CEA) <span class="required">*</span></label>
+                  <input type="text" id="agent-fullname" class="form-input" placeholder="e.g. Rachel Lim Siew Hui" required />
+                </div>
+                <div class="form-group">
+                  <label for="agent-cea-number" class="form-label">CEA Registration Number <span class="required">*</span></label>
+                  <input type="text" id="agent-cea-number" class="form-input" placeholder="e.g. R012345A" pattern="[R|r][0-9]{6}[A-Za-z]" required />
+                  <span class="form-hint">Format: R followed by 6 digits and 1 letter (e.g. R058491C)</span>
+                </div>
+              </div>
+
+              <div class="form-grid cols-2">
+                <div class="form-group">
+                  <label for="agent-agency" class="form-label">Licensed Real Estate Agency <span class="required">*</span></label>
+                  <select id="agent-agency" class="form-select" required>
+                    <option value="PropNex Realty Pte Ltd" selected>PropNex Realty Pte Ltd (L3008022J)</option>
+                    <option value="ERA Realty Network Pte Ltd">ERA Realty Network Pte Ltd (L3002382K)</option>
+                    <option value="Huttons Asia Pte Ltd">Huttons Asia Pte Ltd (L3008899K)</option>
+                    <option value="OrangeTee & Tie Pte Ltd">OrangeTee & Tie Pte Ltd (L3009250K)</option>
+                    <option value="SRI Pte Ltd">SRI Pte Ltd (L3010738A)</option>
+                    <option value="Cuscaden Peak / Other Agency">Other CEA Licensed Agency</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="agent-agency-license" class="form-label">Agency License No. <span class="required">*</span></label>
+                  <input type="text" id="agent-agency-license" class="form-input" placeholder="e.g. L3008022J" value="L3008022J" required />
+                </div>
+              </div>
+
+              <div class="form-grid cols-2">
+                <div class="form-group">
+                  <label for="agent-email" class="form-label">Agency / Business Email <span class="required">*</span></label>
+                  <input type="email" id="agent-email" class="form-input" placeholder="e.g. rachel.lim@propnex.com" required />
+                </div>
+                <div class="form-group">
+                  <label for="agent-phone" class="form-label">Mobile Contact (+65) <span class="required">*</span></label>
+                  <div class="phone-input-wrap">
+                    <span class="country-code">+65</span>
+                    <input type="tel" id="agent-phone" class="form-input phone-field" placeholder="9123 4567" maxlength="8" required />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-grid cols-2">
+                <div class="form-group">
+                  <label for="agent-specialization" class="form-label">Core Advisory Specialization <span class="required">*</span></label>
+                  <select id="agent-specialization" class="form-select" required>
+                    <option value="HDB Resale & Upgraders" selected>HDB Resale & Upgraders</option>
+                    <option value="Private Condos & Executive Condos">Private Condominiums & ECs</option>
+                    <option value="Prime CCR Luxury & Sentosa">Prime CCR Luxury & Sentosa</option>
+                    <option value="Landed Homes & GCBs">Landed Homes & GCBs</option>
+                    <option value="Developer New Launches">Developer New Launches</option>
+                    <option value="Commercial & Shophouses">Commercial & Shophouses</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="agent-primary-district" class="form-label">Primary Territory / District <span class="required">*</span></label>
+                  <select id="agent-primary-district" class="form-select" required>
+                    <option value="D01–D08: Central, CBD, Tanjong Pagar">D01–D08: Central, CBD, Tanjong Pagar</option>
+                    <option value="D09–D11: Orchard, River Valley, Bukit Timah">D09–D11: Orchard, River Valley, Bukit Timah</option>
+                    <option value="D12–D14: Toa Payoh, Balestier, Geylang">D12–D14: Toa Payoh, Balestier, Geylang</option>
+                    <option value="D15–D16: East Coast, Marine Parade, Bedok">D15–D16: East Coast, Marine Parade, Bedok</option>
+                    <option value="D19–D20: Serangoon, Bishan, AMK, Punggol" selected>D19–D20: Serangoon, Bishan, AMK, Punggol</option>
+                    <option value="D21–D24: Clementi, Jurong East/West">D21–D24: Clementi, Jurong East/West</option>
+                    <option value="D25–D28: Woodlands, Yishun, Sembawang">D25–D28: Woodlands, Yishun, Sembawang</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-grid cols-2">
+                <div class="form-group">
+                  <label for="agent-password" class="form-label">Password <span class="required">*</span></label>
+                  <input type="password" id="agent-password" class="form-input" placeholder="At least 8 characters" minlength="8" required />
+                </div>
+                <div class="form-group">
+                  <label for="agent-confirm-password" class="form-label">Confirm Password <span class="required">*</span></label>
+                  <input type="password" id="agent-confirm-password" class="form-input" placeholder="Re-enter password" minlength="8" required />
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-top: 0.5rem;">
+                <label class="checkbox-label" for="agent-cea-code-agree">
+                  <input type="checkbox" id="agent-cea-code-agree" required />
+                  <span>I confirm I am an active CEA-licensed salesperson and agree to adhere to the <a href="https://www.cea.gov.sg" target="_blank" rel="noopener noreferrer" class="form-link">CEA Code of Ethics & Professional Conduct</a> and Dream Home terms.</span>
+                </label>
+              </div>
+
+              <div class="form-actions" style="margin-top: 1rem;">
+                <button type="submit" class="btn btn-primary" id="btn-submit-agent" style="width: 100%; justify-content: center; background-color: #0f172a;">
+                  <span class="material-symbols-outlined">badge</span>
+                  <span>Create Real Estate Agent Account</span>
+                </button>
+              </div>
+            </form>
           </div>
 
         </div>

@@ -147,6 +147,17 @@ function initNavigation() {
       }
     });
   });
+
+  // Top-right Create Account button in header
+  const headerBtnCreate = document.getElementById('header-btn-create-account');
+  if (headerBtnCreate) {
+    headerBtnCreate.addEventListener('click', () => {
+      const accountTab = document.getElementById('tab-create-account');
+      if (accountTab) {
+        accountTab.click();
+      }
+    });
+  }
 }
 
 /* ==========================================================================
@@ -1444,6 +1455,338 @@ function filterAndRenderAmenitiesList() {
 }
 
 /* ==========================================================================
+   6. ACCOUNT CREATION & USER PROFILES
+   ========================================================================== */
+
+/**
+ * Initializes the Create Account module:
+ * - View switching (Home Buyer, Real Estate Agent, Side-by-Side)
+ * - Home Buyer account registration and validation
+ * - Real Estate Agent account registration with CEA number validation
+ * - Account persistence in localStorage
+ * - Dynamic profile rendering and quick-jump navigation to Price Advisor
+ */
+function initAccountModule() {
+  const formsWrapper = document.getElementById('account-forms-wrapper');
+  const btnShowBuyer = document.getElementById('btn-show-buyer-form');
+  const btnShowAgent = document.getElementById('btn-show-agent-form');
+  const btnShowBoth = document.getElementById('btn-show-both-forms');
+  const loggedInCard = document.getElementById('account-logged-in-card');
+  const headerBtn = document.getElementById('header-btn-create-account');
+  const headerBtnLabel = document.getElementById('header-btn-account-label');
+
+  // Agency license map
+  const agencyLicenseMap = {
+    'PropNex Realty Pte Ltd': 'L3008022J',
+    'ERA Realty Network Pte Ltd': 'L3002382K',
+    'Huttons Asia Pte Ltd': 'L3008899K',
+    'OrangeTee & Tie Pte Ltd': 'L3009250K',
+    'SRI Pte Ltd': 'L3010738A'
+  };
+
+  const agentAgencySelect = document.getElementById('agent-agency');
+  const agentLicenseInput = document.getElementById('agent-agency-license');
+  if (agentAgencySelect && agentLicenseInput) {
+    agentAgencySelect.addEventListener('change', () => {
+      const selected = agentAgencySelect.value;
+      if (agencyLicenseMap[selected]) {
+        agentLicenseInput.value = agencyLicenseMap[selected];
+      } else {
+        agentLicenseInput.value = '';
+      }
+    });
+  }
+
+  // Handle Switcher Buttons
+  const switcherBtns = [btnShowBuyer, btnShowAgent, btnShowBoth].filter(Boolean);
+  switcherBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      switcherBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (!formsWrapper) return;
+      formsWrapper.classList.remove('show-buyer', 'show-agent', 'show-both');
+
+      if (btn === btnShowBuyer) {
+        formsWrapper.classList.add('show-buyer');
+      } else if (btn === btnShowAgent) {
+        formsWrapper.classList.add('show-agent');
+      } else if (btn === btnShowBoth) {
+        formsWrapper.classList.add('show-both');
+      }
+    });
+  });
+
+  // Render Saved Account
+  function renderSavedAccount() {
+    let savedAccount = null;
+    try {
+      const raw = localStorage.getItem('dreamHome_account');
+      if (raw) savedAccount = JSON.parse(raw);
+    } catch (e) {
+      console.warn('Error reading saved account:', e);
+    }
+
+    if (!savedAccount || !savedAccount.fullName) {
+      if (loggedInCard) loggedInCard.style.display = 'none';
+      if (headerBtnLabel) headerBtnLabel.textContent = 'Create Account';
+      if (headerBtn) headerBtn.classList.remove('signed-in');
+      return;
+    }
+
+    // Display Logged-In Card
+    if (loggedInCard) {
+      loggedInCard.style.display = 'block';
+
+      const userNameEl = document.getElementById('account-user-name');
+      const userEmailEl = document.getElementById('account-user-email');
+      const typeBadgeEl = document.getElementById('account-type-badge');
+      const detailsGrid = document.getElementById('account-details-content');
+
+      if (userNameEl) userNameEl.textContent = savedAccount.fullName;
+      if (userEmailEl) userEmailEl.textContent = savedAccount.email;
+
+      if (typeBadgeEl) {
+        if (savedAccount.role === 'buyer') {
+          typeBadgeEl.textContent = 'Verified Home Buyer';
+          typeBadgeEl.className = 'account-badge-pill buyer-pill';
+        } else {
+          typeBadgeEl.textContent = `CEA Registered Agent (${savedAccount.ceaNumber || 'Licensed'})`;
+          typeBadgeEl.className = 'account-badge-pill agent-pill';
+        }
+      }
+
+      if (detailsGrid) {
+        detailsGrid.innerHTML = '';
+        const items = [];
+
+        if (savedAccount.role === 'buyer') {
+          items.push({ label: 'Profile Type', val: savedAccount.buyerType || 'Citizen Buyer' });
+          items.push({ label: 'Target Property', val: savedAccount.targetProperty || 'HDB 4-Room' });
+          items.push({ label: 'Target Budget', val: savedAccount.budget || '$500k - $700k' });
+          items.push({ label: 'Preferred Town', val: savedAccount.preferredTown || 'Ang Mo Kio' });
+          items.push({ label: 'IPA / HFE Status', val: savedAccount.ipaStatus || 'Approved' });
+          items.push({ label: 'Contact', val: `+65 ${savedAccount.phone}` });
+        } else {
+          items.push({ label: 'CEA Registration', val: savedAccount.ceaNumber });
+          items.push({ label: 'Agency', val: savedAccount.agency });
+          items.push({ label: 'License No.', val: savedAccount.agencyLicense || 'L3008022J' });
+          items.push({ label: 'Advisory Focus', val: savedAccount.specialization });
+          items.push({ label: 'Primary District', val: savedAccount.primaryDistrict });
+          items.push({ label: 'Contact', val: `+65 ${savedAccount.phone}` });
+        }
+
+        items.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'account-detail-item';
+          div.innerHTML = `
+            <div class="account-detail-label">${escapeHtml(item.label)}</div>
+            <div class="account-detail-val">${escapeHtml(item.val)}</div>
+          `;
+          detailsGrid.appendChild(div);
+        });
+      }
+    }
+
+    // Update Header Button
+    if (headerBtnLabel) {
+      const firstName = savedAccount.fullName.split(' ')[0] || 'My Account';
+      headerBtnLabel.textContent = firstName;
+    }
+    if (headerBtn) {
+      headerBtn.classList.add('signed-in');
+    }
+  }
+
+  // Home Buyer Form Submit
+  const formBuyer = document.getElementById('form-buyer-account');
+  if (formBuyer) {
+    formBuyer.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const fullName = (document.getElementById('buyer-fullname')?.value || '').trim();
+      const email = (document.getElementById('buyer-email')?.value || '').trim();
+      const phone = (document.getElementById('buyer-phone')?.value || '').trim();
+      const buyerType = document.getElementById('buyer-type')?.value || '';
+      const targetProperty = document.getElementById('buyer-property-interest')?.value || '';
+      const budget = document.getElementById('buyer-budget')?.value || '';
+      const preferredTown = document.getElementById('buyer-preferred-town')?.value || '';
+      const ipaStatus = document.getElementById('buyer-ipa-status')?.value || '';
+      const password = document.getElementById('buyer-password')?.value || '';
+      const confirmPassword = document.getElementById('buyer-confirm-password')?.value || '';
+      const termsAgree = document.getElementById('buyer-terms-agree')?.checked;
+
+      if (!fullName) {
+        alert('Please enter your full name.');
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      if (!phone || phone.length < 8) {
+        alert('Please enter an 8-digit Singapore contact number.');
+        return;
+      }
+      if (!password || password.length < 8) {
+        alert('Password must be at least 8 characters.');
+        return;
+      }
+      if (password !== confirmPassword) {
+        alert('Passwords do not match. Please re-enter your password.');
+        return;
+      }
+      if (!termsAgree) {
+        alert('Please accept the Terms of Service & Privacy Policy to continue.');
+        return;
+      }
+
+      const buyerAccount = {
+        role: 'buyer',
+        fullName,
+        email,
+        phone,
+        buyerType,
+        targetProperty,
+        budget,
+        preferredTown,
+        ipaStatus,
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        localStorage.setItem('dreamHome_account', JSON.stringify(buyerAccount));
+      } catch (err) {
+        console.error('Failed to save account:', err);
+      }
+
+      renderSavedAccount();
+      formBuyer.reset();
+      
+      const panel = document.getElementById('panel-create-account');
+      if (panel) panel.scrollIntoView({ behavior: 'smooth' });
+
+      alert(`🎉 Welcome to Dream Home, ${fullName}! Your Home Buyer account has been created successfully.`);
+    });
+  }
+
+  // Real Estate Agent Form Submit
+  const formAgent = document.getElementById('form-agent-account');
+  if (formAgent) {
+    formAgent.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const fullName = (document.getElementById('agent-fullname')?.value || '').trim();
+      const ceaNumber = (document.getElementById('agent-cea-number')?.value || '').trim().toUpperCase();
+      const agency = document.getElementById('agent-agency')?.value || '';
+      const agencyLicense = (document.getElementById('agent-agency-license')?.value || '').trim();
+      const email = (document.getElementById('agent-email')?.value || '').trim();
+      const phone = (document.getElementById('agent-phone')?.value || '').trim();
+      const specialization = document.getElementById('agent-specialization')?.value || '';
+      const primaryDistrict = document.getElementById('agent-primary-district')?.value || '';
+      const password = document.getElementById('agent-password')?.value || '';
+      const confirmPassword = document.getElementById('agent-confirm-password')?.value || '';
+      const ceaAgree = document.getElementById('agent-cea-code-agree')?.checked;
+
+      if (!fullName) {
+        alert('Please enter your full name as registered with CEA.');
+        return;
+      }
+      const ceaRegex = /^[Rr][0-9]{6}[A-Za-z]$/;
+      if (!ceaNumber || !ceaRegex.test(ceaNumber)) {
+        alert('Please enter a valid CEA Registration Number in the format R012345A (R + 6 digits + 1 letter).');
+        return;
+      }
+      if (!agency) {
+        alert('Please select your licensed estate agency.');
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        alert('Please enter a valid business/agency email address.');
+        return;
+      }
+      if (!phone || phone.length < 8) {
+        alert('Please enter an 8-digit Singapore contact number.');
+        return;
+      }
+      if (!password || password.length < 8) {
+        alert('Password must be at least 8 characters.');
+        return;
+      }
+      if (password !== confirmPassword) {
+        alert('Passwords do not match. Please re-enter your password.');
+        return;
+      }
+      if (!ceaAgree) {
+        alert('Please confirm agreement to the CEA Code of Ethics & Professional Conduct.');
+        return;
+      }
+
+      const agentAccount = {
+        role: 'agent',
+        fullName,
+        ceaNumber,
+        agency,
+        agencyLicense,
+        email,
+        phone,
+        specialization,
+        primaryDistrict,
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        localStorage.setItem('dreamHome_account', JSON.stringify(agentAccount));
+      } catch (err) {
+        console.error('Failed to save account:', err);
+      }
+
+      renderSavedAccount();
+      formAgent.reset();
+
+      const panel = document.getElementById('panel-create-account');
+      if (panel) panel.scrollIntoView({ behavior: 'smooth' });
+
+      alert(`🎉 Welcome to Dream Home, ${fullName}! Your Real Estate Agent (CEA) profile has been verified and registered.`);
+    });
+  }
+
+  // Sign Out / Switch Account
+  const btnSignOut = document.getElementById('btn-account-sign-out');
+  if (btnSignOut) {
+    btnSignOut.addEventListener('click', () => {
+      if (confirm('Are you sure you want to sign out? You can register or log in with another account anytime.')) {
+        localStorage.removeItem('dreamHome_account');
+        renderSavedAccount();
+      }
+    });
+  }
+
+  // Explore Price Advisor Shortcut
+  const btnGotoAdvisor = document.getElementById('btn-account-goto-advisor');
+  if (btnGotoAdvisor) {
+    btnGotoAdvisor.addEventListener('click', () => {
+      let saved = null;
+      try {
+        const raw = localStorage.getItem('dreamHome_account');
+        if (raw) saved = JSON.parse(raw);
+      } catch (e) {}
+
+      if (saved && saved.preferredTown) {
+        const townSelect = document.getElementById('search-town');
+        if (townSelect) townSelect.value = saved.preferredTown;
+      }
+
+      const advisorTab = document.getElementById('tab-price-advisor');
+      if (advisorTab) advisorTab.click();
+    });
+  }
+
+  // Initial render on load
+  renderSavedAccount();
+}
+
+/* ==========================================================================
    INITIALIZATION
    ========================================================================== */
 
@@ -1455,4 +1798,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initPriceTrends();
   initDocumentationAdvisor();
   initAmenities();
+  initAccountModule();
 });
