@@ -111,6 +111,7 @@ function debounce(func, waitMs = 350) {
 function initNavigation() {
   const tabs = document.querySelectorAll('.nav-tab');
   const sections = document.querySelectorAll('.panel-section');
+  const headerBtnCreate = document.getElementById('header-btn-create-account');
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -174,6 +175,17 @@ function initNavigation() {
       const panel = document.getElementById('panel-create-account');
       if (panel) {
         panel.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
+
+  // Top banner link: "find our listed agent"
+  const bannerLinkAgent = document.getElementById('link-banner-find-agent');
+  if (bannerLinkAgent) {
+    bannerLinkAgent.addEventListener('click', () => {
+      const agentTab = document.getElementById('tab-find-agent');
+      if (agentTab) {
+        agentTab.click();
       }
     });
   }

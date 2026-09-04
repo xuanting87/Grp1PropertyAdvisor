@@ -455,6 +455,28 @@ p {
   font-size: 0.9375rem;
 }
 
+.disclaimer-agent-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 700;
+  color: #b45309;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  display: inline;
+  transition: color 150ms ease;
+}
+
+.disclaimer-agent-link:hover {
+  color: #78350f;
+  text-decoration-thickness: 2px;
+}
+
 /* ==========================================================================
    5. Main Content Layout
    ========================================================================== */
